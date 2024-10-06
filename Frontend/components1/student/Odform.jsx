@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { storage } from '../../config'; // Make sure to import the storage correctly
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
@@ -21,6 +23,7 @@ import Modal from 'react-native-modal';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const Odform = ({ navigation, route }) => {
   const { userdetails, internallimit, externallimit, internaltaken, externaltaken, useremail } = route.params;
   console.log("internallimit🤣🤣🤣🤣🤣🤣🤣🤣",internallimit)
@@ -51,7 +54,7 @@ console.log("internalawailed",internalawailed)
   const [menuVisible, setMenuVisible] = useState(false);
     const internalbalance=internallimits-internalawailed;
     const externalbalance=externallimits-externalawailed
-  
+  const [uploading,setuploading]=useState(false)
   useEffect(() => {
    
     const today = new Date();
@@ -86,6 +89,20 @@ console.log("internalawailed",internalawailed)
     }
   }, [odType, totalDays, internalbalance, externalbalance]);
 
+  const uploadImage = async (imageurl, path) => {
+    try {
+      const response = await fetch(imageurl);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const blobfile = await response.blob();
+      const reference = ref(storage, `${path}/${Date.now()}`); // Use the storage reference
+      const result = await uploadBytes(reference, blobfile);
+      const image = await getDownloadURL(result.ref);
+      return image;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error; // propagate error
+    }
+  };
   const handleImagePick = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -95,7 +112,10 @@ console.log("internalawailed",internalawailed)
         quality: 1,
       });
       if (!result.canceled) {
-        setPhoto(result.assets[0].uri);
+        //setPhoto(result.assets[0].uri);
+        const imageData = await uploadImage(result.assets[0].uri, 'images'); // Call the updated function
+        console.log("Uploaded image data:", imageData);
+        setPhoto(imageData)
       } else {
         console.log("Image selection was canceled.");
       }
@@ -103,6 +123,7 @@ console.log("internalawailed",internalawailed)
       console.error("Error picking an image:", error);
     }
   };
+  
 
   const openPdf = async (uri) => {
     try {
@@ -235,6 +256,7 @@ console.log("internalawailed",internalawailed)
     const appliedDate1 = formatDateForMySQL(appliedDate);
     
     try {
+      console.log("😎😎😎😎😎😎",photo)
       const response = await axios.post(`${API_BASE_URL}/odform`, {
         email,
         rollno,

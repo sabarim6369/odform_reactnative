@@ -15,7 +15,6 @@ function Home({ navigation }) {
   };
 
   useEffect(() => {
-    // Bounce animation for logo
     Animated.sequence([
       Animated.timing(logoScale, {
         toValue: 1.2,
