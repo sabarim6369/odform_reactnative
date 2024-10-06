@@ -103,6 +103,46 @@ console.log("internalawailed",internalawailed)
       throw error; // propagate error
     }
   };
+
+  const uploadPdf = async (pdfUri) => {
+    try {
+      const response = await fetch(pdfUri);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const blobfile = await response.blob();
+      const reference = ref(storage, `pdfs/${Date.now()}.pdf`); // Use the storage reference for PDFs
+      const result = await uploadBytes(reference, blobfile);
+      const pdfDownloadUrl = await getDownloadURL(result.ref);
+      return pdfDownloadUrl;
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+      throw error; // propagate error
+    }
+  };
+
+  const handlePdfPick = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+        copyToCacheDirectory: true,
+      });
+
+      if (result.canceled) {
+        console.log("PDF selection was canceled.");
+        return;
+      }
+
+      console.log(result.assets[0].uri);
+      const uploadedPdfUrl = await uploadPdf(result.assets[0].uri); // Call the upload function
+      setPdf(uploadedPdfUrl); // Store the uploaded PDF URL
+    } catch (error) {
+      console.error("Error picking a PDF:", error);
+    }
+  };
+
+
+
+
+
   const handleImagePick = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -140,24 +180,24 @@ console.log("internalawailed",internalawailed)
     }
   };
 
-  const handlePdfPick = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: 'application/pdf',
-        copyToCacheDirectory: true,
-      });
+  // const handlePdfPick = async () => {
+  //   try {
+  //     const result = await DocumentPicker.getDocumentAsync({
+  //       type: 'application/pdf',
+  //       copyToCacheDirectory: true,
+  //     });
   
-      if (result.canceled) {
-        console.log("PDF selection was canceled.");
-        return;
-      }
+  //     if (result.canceled) {
+  //       console.log("PDF selection was canceled.");
+  //       return;
+  //     }
   
-      console.log(result.assets[0].uri);
-      setPdf(result.assets[0].uri);      
-    } catch (error) {
-      console.error("Error picking a PDF:", error);
-    }
-  };
+  //     console.log(result.assets[0].uri);
+  //     setPdf(result.assets[0].uri);      
+  //   } catch (error) {
+  //     console.error("Error picking a PDF:", error);
+  //   }
+  // };
 
   const calculateDaysBetweenDates = (start, end) => {
     if (start > end) {
