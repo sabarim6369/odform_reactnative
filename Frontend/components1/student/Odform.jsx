@@ -219,7 +219,7 @@ console.log("internalawailed",internalawailed)
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!rollno || !reason || !startDate || !endDate || !odType || !photo||!pdf) {
+    if (!rollno || !reason || !startDate || !endDate || !odType || !photo) {
       alert('Please fill all the fields before submitting.');
       return;
     }

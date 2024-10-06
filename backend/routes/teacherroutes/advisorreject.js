@@ -4,9 +4,9 @@ const studentconnection = require("../../mysql/databases/studentdatabase/connect
 const teacherconnection = require("../../mysql/databases/teacherdatabase/connections/hostconnection");
 
 advisorreject.post("/advisorreject", (req, res) => {
-    const { id, classs, section, year,reasonofrejection} = req.body;        
+    const { id, classs, section, year, reasonofrejection, name, email } = req.body;        
 
-    console.log("ID to fetch details😍😍😍😍😍:", id);
+    console.log("ID to fetch details:", id);
 
     const query = `SELECT * FROM studentoddetails WHERE id=?`;
     studentconnection.query(query, [id], (err, results) => {
@@ -19,7 +19,7 @@ advisorreject.post("/advisorreject", (req, res) => {
             return res.status(404).json({ message: "Student OD details not found" });
         }
         const {
-            email,
+            email: studentEmail, // Renamed to avoid conflict
             rollno,
             username,
             classs,
@@ -36,6 +36,7 @@ advisorreject.post("/advisorreject", (req, res) => {
             odtype,
             year
         } = results[0]; 
+
         const insertQuery = `
         INSERT INTO rejectedod (
             email, 
@@ -54,11 +55,16 @@ advisorreject.post("/advisorreject", (req, res) => {
             presentyear, 
             odtype, 
             year,
-            reasonofrejection
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+            reasonofrejection,
+            rejectedby
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
+
+        // Combine name and email for the rejectedby field
+        const rejectedBy = `${name} (${email})`;
+
         teacherconnection.query(insertQuery, [
-            email,
+            studentEmail, // Use student's email
             rollno,
             username,
             classs,
@@ -74,23 +80,25 @@ advisorreject.post("/advisorreject", (req, res) => {
             presentyear,
             odtype,
             year,
-            reasonofrejection
+            reasonofrejection,
+            rejectedBy // Add name and email to rejectedby column
         ], (insertErr, insertResults) => {
             if (insertErr) {
-                console.log("Error inserting accepted OD:", insertErr);
-                return res.status(500).json({ message: "Error inserting accepted OD" });
+                console.log("Error inserting rejected OD:", insertErr);
+                return res.status(500).json({ message: "Error inserting rejected OD" });
             }
             
             const deleteQuery = `DELETE FROM studentoddetails WHERE id=?`;
             studentconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
                 if (delErr) {
-                    console.log("Error deleting accepted OD:", delErr);
-                    return res.status(500).json({ message: "Error deleting accepted OD" });
+                    console.log("Error deleting rejected OD:", delErr);
+                    return res.status(500).json({ message: "Error deleting rejected OD" });
                 }
                
-                    return res.status(201).json({ message: "OD rejected successfully"});
-                });
+                return res.status(201).json({ message: "OD rejected successfully" });
             });
         });
     });
-module.exports=advisorreject;
+});
+
+module.exports = advisorreject;

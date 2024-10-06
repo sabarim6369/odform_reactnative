@@ -22,14 +22,38 @@ const Teacherhome = ({ navigation, route }) => {
   };
 const handlebuttons=async(item)=>{
   if (item === 'Check Registered OD') {
-    console.log(".....😐😐😐😐😐")
-    const response=axios.post("http://172.16.127.53:5000/registeredodadvisor",{classs,section,year});
-    console.log((await response).data.user)
-    const result=(await response).data.user
-        navigation.navigate('registeredodadvisor',{result:result,classs:classs,section:section,year:year});
+    console.log(".....😐😐😐😐😐");
+    try {
+        const response = await axios.post("http://172.16.127.53:5000/registeredodadvisor", { classs, section, year });
+        const result = response.data.user;  // Removed redundant await
+        console.log(result);
+        navigation.navigate('registeredodadvisor', { result, classs, section, year, name, email });
+    } catch (error) {
+        console.error("Error fetching registered OD:", error);  // Added error handling
+    }
+} else if (item === 'Check Accepted OD History') {
+    try {
+        const response = await axios.post("http://172.16.127.53:5000/acceptedodadvisor", { classs, section, year });
+        const result = response.data.user;
+        console.log(result);
+        navigation.navigate('acceptedodadvisor', {results:result});
+    } catch (error) {
+        console.error("Error fetching accepted OD history:", error);
+    }
+} else if (item === 'Check Rejected OD History') {
+    try {
+        const response = await axios.post("http://172.16.127.53:5000/rejectedodadvisor", { classs, section, year });
+        const result = response.data.user;
+        console.log("🙏🙏🙏🙏🙏🙏🙏🎉🎉😍😍❤️‍🔥😍🤣🐦‍🔥🎂😪😒");
+        console.log(result);
+        navigation.navigate('rejectedodadvisor', { results:result});
+    } catch (error) {
+        console.error("Error fetching rejected OD history:", error);
+    }
 } else {
     console.log(item);
 }
+
 }
   return (
     <View style={styles.container}>

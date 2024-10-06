@@ -19,7 +19,8 @@ create table if not exists rejectedod(
     presentyear int ,
     odtype varchar(100),
     year int,
-    reasonofrejection varchar(1000)
+    reasonofrejection varchar(1000),
+    rejectedby varchar(100)
 )
 `
 

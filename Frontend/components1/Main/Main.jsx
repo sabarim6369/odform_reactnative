@@ -13,6 +13,9 @@ import ODInformation from '../student/Previousod';
 import Teacherhome from '../teacher/Teacherhome'
 import registeredodadvisor from '../teacher/registeredod';
 import advisorviewdetails from '../teacher/viewdetails';
+import acceptedod from './../teacher/history/accepted';
+import rejectedod from './../teacher/history/rejected'
+import hodhome from '../hod/hodhome';
 const Stack = createStackNavigator();
 
 function Main() {
@@ -40,12 +43,15 @@ function Main() {
       <Stack.Screen name="teacherHome" component={Teacherhome} options={{ headerShown: false }} />
       <Stack.Screen name="registeredodadvisor" component={registeredodadvisor} options={{headerShown:false}}/>
       <Stack.Screen name="viewdetails" component={advisorviewdetails} options={{headerShown:false}}/>
+      <Stack.Screen name="acceptedodadvisor" component={acceptedod} options={{headerShown:false}}/>
+      <Stack.Screen name="rejectedodadvisor" component={rejectedod} options={{headerShown:false}}/>
     
      
     
     {/* hod routes */}
       <Stack.Screen name="hodLogin" component={hodLogin}options={{ headerShown: false }}/>
       <Stack.Screen name="hodSignup" component={hodSignup}options={{ headerShown: false }}/>
+      <Stack.Screen name="hodhome" component={hodhome}options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 }

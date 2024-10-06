@@ -42,8 +42,8 @@ signuproute.post("/teachersignup", async (req, res) => {
         }
 
         const insertQuery = `
-            INSERT INTO signupdetails (email, password, username, classhandling, section, year) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO signupdetails (email, password, username, classhandling, year) 
+            VALUES (?, ?, ?, ?, ?)
         `;
         teacherconnection.getConnection((err, connection) => {
             if (err) {
@@ -51,7 +51,7 @@ signuproute.post("/teachersignup", async (req, res) => {
                 return res.status(500).send("Server error");
             }
 
-            connection.query(insertQuery, [email, hashedPassword, name, selectedClass, selectedSection, selectedYear], (err, result) => {
+            connection.query(insertQuery, [email, hashedPassword, name, selectedClass,selectedYear], (err, result) => {
                 connection.release(); 
                 if (err) {
                     console.error("Error inserting new user:", err.message);

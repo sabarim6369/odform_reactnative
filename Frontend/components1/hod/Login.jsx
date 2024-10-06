@@ -1,25 +1,53 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native'; // Import Alert
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import Modal from 'react-native-modal'; 
-
+import axios from 'axios';
+import {API_BASE_URL} from '@env';
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); 
   const [modalMessage, setModalMessage] = useState(''); 
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (email && password) {
-      console.log('Email:', email);
-      console.log('Password:', password);
-      navigation.navigate('Studenthome');
-    } else {
+  const handleLogin = async () => {
+    if (!email || !password) {
       setModalMessage('Please enter both email and password'); 
       setIsModalVisible(true);
+      return;
+    }
+
+    setLoading(true); 
+    try {
+      
+      const response = await axios.post("http://172.16.127.53:5000/hodlogin", { email, password });
+      if (response.status === 200) {
+        const message = response.data.message || 'Login successful';
+        Alert.alert('Success', message); 
+        console.log("😐😐😐😐😐😍😍😐",response.data.user.username)
+        console.log("😐😐😐😐😐😍😍😐",response.data.user.year)
+            
+             const name=response.data.user.username
+             const department=response.data.user.department
+             console.log("......./////......///",department)
+             const year=response.data.user.year;
+        navigation.navigate('hodhome', {name:name,email:email,year:year,department:department});
+      } else {
+        const message = response.data.message || 'Login failed. Please check your credentials.';
+        Alert.alert('Error', message); 
+      }
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      setModalMessage(error.response ? error.response.data.message : 'An error occurred. Please try again later.');
+      setIsModalVisible(true);
+    } finally {
+      setLoading(false);
     }
   };
+
+ 
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -33,7 +61,7 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}> HOD Login</Text>
 
       <TextInput
         style={styles.input}
@@ -61,9 +89,13 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleLogin}>
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
+      {loading ? ( // Show loading spinner when logging in
+        <ActivityIndicator size="large" color="#4caf50" />
+      ) : (
+        <TouchableOpacity style={styles.submitButton} onPress={handleLogin}>
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
+      )}
 
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account?</Text>
@@ -93,7 +125,7 @@ const styles = StyleSheet.create({
   },
   homeButtonContainer: {
     position: 'absolute',
-    top: 40,
+    top: 60,
     right: 20,
   },
   homeButton: {

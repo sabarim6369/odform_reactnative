@@ -1,39 +1,53 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 function Home({ navigation }) {
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const handleNavigation = (value) => {
+    if (value) {
+      setSelectedOption(value);
+      navigation.navigate(value);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Logo or Graphic at the Top */}
-      <Image 
-        source={require('../assets/logo/eshwar logo.jpg')} // Add your logo/image path here
-        style={styles.logo}
-      />
-      
+      {/* Logo Section */}
+      <View style={styles.logoContainer}>
+        <Image 
+          source={require('../assets/logo/eshwar_logo.jpg')} // Ensure to replace this with the correct image path
+          style={styles.logo}
+        />
+      </View>
+
       {/* Title Section */}
-      <Text style={styles.title}>Let's Get Started</Text>
+      <Text style={styles.title}>Welcome to Eshwar College</Text>
+      <Text style={styles.subtitle}>Choose an option to proceed</Text>
 
-      {/* Login Buttons */}
-      <TouchableOpacity 
-        style={[styles.button, styles.teacherButton]} 
-        onPress={() => navigation.navigate('teacherLogin')}
-      >
-        <Text style={styles.buttonText}>Teacher Login</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={[styles.button, styles.studentButton]} 
-        onPress={() => navigation.navigate('studentLogin')}
-      >
-        <Text style={styles.buttonText}>Student Login</Text>
-      </TouchableOpacity>
+      {/* Option Buttons */}
+      <View style={styles.optionsContainer}>
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => handleNavigation('teacherLogin')}
+        >
+          <Text style={styles.optionText}>Teacher Login</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, styles.hodButton]} 
-        onPress={() => navigation.navigate('hodLogin')}
-      >
-        <Text style={styles.buttonText}>HOD Login</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => handleNavigation('studentLogin')}
+        >
+          <Text style={styles.optionText}>Student Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => handleNavigation('hodLogin')}
+        >
+          <Text style={styles.optionText}>HOD Login</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Footer Section */}
       <View style={styles.footer}>
@@ -54,56 +68,60 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f8fa',
     paddingHorizontal: 20,
   },
+  logoContainer: {
+    marginBottom: 30,
+    alignItems: 'center',
+  },
   logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 30, // Add some space below the logo
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#3498db',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
   },
   title: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 50,
     color: '#2c3e50',
+    marginBottom: 10,
     textAlign: 'center',
-    textTransform: 'uppercase',
-    letterSpacing: 2,
+    letterSpacing: 1.5,
   },
-  button: {
-    width: '85%',
-    paddingVertical: 15,
-    borderRadius: 25,
+  subtitle: {
+    fontSize: 18,
+    color: '#7f8c8d',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  optionsContainer: {
+    width: '100%',
     alignItems: 'center',
-    marginVertical: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    marginBottom: 30,
+  },
+  optionButton: {
+    backgroundColor: '#3498db',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    marginVertical: 10,
+    width: '80%',
+    alignItems: 'center',
     elevation: 4,
   },
-  teacherButton: {
-    backgroundColor: '#1abc9c',
-    borderColor: '#16a085',
-    borderWidth: 1,
-  },
-  studentButton: {
-    backgroundColor: '#3498db',
-    borderColor: '#2980b9',
-    borderWidth: 1,
-  },
-  hodButton: {
-    backgroundColor: '#e74c3c',
-    borderColor: '#c0392b',
-    borderWidth: 1,
-  },
-  buttonText: {
+  optionText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
-    textTransform: 'uppercase',
     letterSpacing: 1,
   },
   footer: {
-    marginTop: 40, // Space above the footer
+    marginTop: 40,
     alignItems: 'center',
   },
   footerText: {

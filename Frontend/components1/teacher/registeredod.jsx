@@ -6,10 +6,11 @@ import InputModal from './modalreject';
 
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
-    const { classs, section, year } = route.params;
+    const { classs, section, year, name, email } = route.params;
     const [searchText, setSearchText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedId, setSelectedId] = useState(null); 
+
     useEffect(() => {
         if (route.params && route.params.result) {
             setResult(route.params.result);
@@ -38,6 +39,8 @@ const ODRequests = ({ navigation, route }) => {
                     section,
                     year,
                     reasonofrejection: reason,
+                    name,
+                    email
                 });
                 if (response.status === 201) {
                     setResult(prevResults => prevResults.filter(od => od.id !== selectedId));
@@ -81,11 +84,11 @@ const ODRequests = ({ navigation, route }) => {
         );
     };
 
-    const handleViewDetails = async(id) => {
-        console.log(id,"😍😍🐦‍🔥🐦‍🔥🐦‍🔥")
-        const response=await axios.post("http://172.16.127.53:5000/viewdetails",{id});
-        const od=response.data.user
-        console.log(od)
+    const handleViewDetails = async (id) => {
+        console.log(id, "😍😍🐦‍🔥🐦‍🔥🐦‍🔥");
+        const response = await axios.post("http://172.16.127.53:5000/viewdetails", { id });
+        const od = response.data.user;
+        console.log(od);
         navigation.navigate('viewdetails', { od });
     };
 
@@ -117,6 +120,11 @@ const ODRequests = ({ navigation, route }) => {
                             <Text style={styles.cardText}>Roll No: {item.rollno}</Text>
                             <Text style={styles.cardText}>Reason: {item.reason}</Text>
                             <Text style={styles.cardText}>Total Days: {item.total_days}</Text>
+                            
+                            <View style={styles.odTypeBox}>
+                                <Text style={styles.odTypeText}>{item.odtype || "Not Specified"}</Text>
+                            </View>
+                            
                             <View style={styles.actionButtons}>
                                 <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id)}>
                                     <Text style={styles.buttonText}>View Details</Text>
@@ -136,6 +144,7 @@ const ODRequests = ({ navigation, route }) => {
                     )}
                 </View>
             </ScrollView>
+
             <InputModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
@@ -161,6 +170,19 @@ const styles = StyleSheet.create({
         fontSize: 28,
         color: '#333',
         marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    odTypeBox: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#007BFF',
+        borderRadius: 5,
+        padding: 5,
+        elevation: 2,
+    },
+    odTypeText: {
+        color: '#fff',
         fontWeight: 'bold',
     },
     searchContainer: {
