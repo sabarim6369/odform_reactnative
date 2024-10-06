@@ -20,6 +20,7 @@ import { Picker } from '@react-native-picker/picker';
 import Modal from 'react-native-modal';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
+import {API_BASE_URL} from "@env";
 const Odform = ({ navigation, route }) => {
   const { userdetails, internallimit, externallimit, internaltaken, externaltaken, useremail } = route.params;
   console.log("internallimit🤣🤣🤣🤣🤣🤣🤣🤣",internallimit)
@@ -234,7 +235,7 @@ console.log("internalawailed",internalawailed)
     const appliedDate1 = formatDateForMySQL(appliedDate);
     
     try {
-      const response = await axios.post("http://172.16.127.53:5000/odform", {
+      const response = await axios.post(`${API_BASE_URL}/odform`, {
         email,
         rollno,
         name,

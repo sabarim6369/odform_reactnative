@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import InputModal from '../modalreject'; 
-
+import {API_BASE_URL} from "@env";
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
     const { classs, section, year } = route.params;
@@ -30,7 +30,7 @@ const ODRequests = ({ navigation, route }) => {
 
     const handleViewDetails = async(id) => {
         console.log(id,"😍😍🐦‍🔥🐦‍🔥🐦‍🔥")
-        const response=await axios.post("http://172.16.127.53:5000/viewdetails",{id});
+        const response=await axios.post(`${API_BASE_URL}/viewdetails`,{id});
         const od=response.data.user
         console.log(od)
         navigation.navigate('viewdetails', { od });

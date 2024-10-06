@@ -3,6 +3,7 @@
   import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
   import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
+import {API_BASE_URL} from "@env";
   const Dashboard = ({ navigation,route }) => {
     const{user,oddays,odtaken}=route.params;
     console.log("😎😎😎😎😎",user.year);
@@ -35,7 +36,7 @@ const [odDetails, setOdDetails] = useState({ internal: 0, external: 0 });
       setExternalBalance(externalLimit - externalTaken);
     }, [internal, external, internallimit, externallimit]);
   const handleGetonduty=async()=>{
-    const response=await axios.post("http://172.16.127.53:5000/odinput",{email});
+    const response=await axios.post(`${API_BASE_URL}/odinput`,{email});
     console.log(response.data) 
 
     const { details, odtaken } = response.data;

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import InputModal from './modalreject'; 
-
+import {API_BASE_URL} from "@env";
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
     const { classs, section, year, name, email } = route.params;
@@ -33,7 +33,7 @@ const ODRequests = ({ navigation, route }) => {
         console.log("Reason entered:", reason);
         if (reason && reason.trim() !== "") {
             try {
-                const response = await axios.post("http://172.16.127.53:5000/advisorreject", {
+                const response = await axios.post(`${API_BASE_URL}/advisorreject`, {
                     id: selectedId,
                     classs,
                     section,
@@ -68,7 +68,7 @@ const ODRequests = ({ navigation, route }) => {
                     text: "OK",
                     onPress: async () => {
                         try {
-                            const response = await axios.post("http://172.16.127.53:5000/advisoraccept", { item, classs, section, year });
+                            const response = await axios.post(`${API_BASE_URL}/advisoraccept`, { item, classs, section, year });
                             if (response.status === 201) {
                                 setResult(prevResults => prevResults.filter(od => od.id !== item.id));
                                 Alert.alert("Success", response.data.message, [{ text: "OK" }]);
@@ -86,7 +86,7 @@ const ODRequests = ({ navigation, route }) => {
 
     const handleViewDetails = async (id) => {
         console.log(id, "😍😍🐦‍🔥🐦‍🔥🐦‍🔥");
-        const response = await axios.post("http://172.16.127.53:5000/viewdetails", { id });
+        const response = await axios.post(`${API_BASE_URL}/viewdetails`, { id });
         const od = response.data.user;
         console.log(od);
         navigation.navigate('viewdetails', { od });

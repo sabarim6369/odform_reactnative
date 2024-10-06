@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
+import {API_BASE_URL} from "@env";
 const Teacherhome = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { name, email, classs, section, year,department } = route.params;
@@ -34,7 +35,7 @@ const handlebuttons=async(item)=>{
   if (item === 'Check Registered OD') {
     console.log(".....😐😐😐😐😐");
     try {
-        const response = await axios.post("http://172.16.127.53:5000/registeredodhod", { year,department});
+        const response = await axios.post(`${API_BASE_URL}/registeredodhod`, { year,department});
         const result = response.data.user;
         console.log(result);
         navigation.navigate('registeredodadvisor', { result,year,department, name, email });
@@ -43,7 +44,7 @@ const handlebuttons=async(item)=>{
     }
 } else if (item === 'Check Accepted OD History') {
     try {
-        const response = await axios.post("http://172.16.127.53:5000/acceptedodhod", { year,department });
+        const response = await axios.post(`${API_BASE_URL}/acceptedodhod`, { year,department });
         const result = response.data.user;
         console.log(result);
         navigation.navigate('acceptedodadvisor', {results:result});
@@ -52,7 +53,7 @@ const handlebuttons=async(item)=>{
     }
 } else if (item === 'Check Rejected OD History') {
     try {
-        const response = await axios.post("http://172.16.127.53:5000/rejectedodhod", { year,department });
+        const response = await axios.post(`${API_BASE_URL}/rejectedodhod`, { year,department });
         const result = response.data.user;
         console.log("🙏🙏🙏🙏🙏🙏🙏🎉🎉😍😍❤️‍🔥😍🤣🐦‍🔥🎂😪😒");
         console.log(result);

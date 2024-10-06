@@ -22,7 +22,7 @@ const Login = ({ navigation }) => {
     setLoading(true); 
     try {
       
-      const response = await axios.post("http://172.16.127.53:5000/hodlogin", { email, password });
+      const response = await axios.post(`${API_BASE_URL}/hodlogin`, { email, password });
       if (response.status === 200) {
         const message = response.data.message || 'Login successful';
         Alert.alert('Success', message); 

@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert 
 import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import {API_BASE_URL} from "@env";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const Signup = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -41,7 +42,7 @@ const Signup = ({ navigation }) => {
   const handleSignup = async () => {
     if (validateForm()) {
       try {
-        const response = await axios.post("http://172.16.127.53:5000/signup", {
+        const response = await axios.post(`${API_BASE_URL}/signup`, {
           email, password, username, classHandling, section, rollNo, year
         });
         

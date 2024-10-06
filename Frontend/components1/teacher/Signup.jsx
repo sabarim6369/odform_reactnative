@@ -4,7 +4,7 @@ import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import {API_BASE_URL} from "@env";
 const Signup = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const Signup = ({ navigation }) => {
     if (name && email && password && confirmPassword && selectedYear && selectedClass && selectedSection) {
       if (password === confirmPassword) {
         try {
-          const response = await axios.post("http://172.16.127.53:5000/teachersignup", { name, email, password, selectedYear, selectedClass, selectedSection });
+          const response = await axios.post(`${API_BASE_URL}/teachersignup`, { name, email, password, selectedYear, selectedClass, selectedSection });
           Alert.alert("Signup Successful", response.data.message, [
             { text: "OK", onPress: () => navigation.navigate('teacherLogin') }
           ]);

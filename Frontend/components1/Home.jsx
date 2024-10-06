@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 function Home({ navigation }) {
   const [selectedOption, setSelectedOption] = useState('');
+    const logoScale = useState(new Animated.Value(1))[0]; 
+  const fadeAnim = useState(new Animated.Value(0))[0];
 
   const handleNavigation = (value) => {
     if (value) {
@@ -11,42 +14,57 @@ function Home({ navigation }) {
     }
   };
 
+  useEffect(() => {
+    // Bounce animation for logo
+    Animated.sequence([
+      Animated.timing(logoScale, {
+        toValue: 1.2,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.timing(logoScale, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [logoScale, fadeAnim]);
+
   return (
     <View style={styles.container}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
-        <Image 
-          source={require('../assets/logo/eshwar_logo.jpg')} // Ensure to replace this with the correct image path
-          style={styles.logo}
+        <Animated.Image
+          source={require('../assets/logo/eshwar logo.jpg')} // Ensure to replace this with the correct image path
+          style={[styles.logo, { transform: [{ scale: logoScale }] }]} // Apply scale transformation
         />
       </View>
 
       {/* Title Section */}
-      <Text style={styles.title}>Welcome to Eshwar College</Text>
-      <Text style={styles.subtitle}>Choose an option to proceed</Text>
+      <Animated.View style={{ opacity: fadeAnim }}>
+        <Text style={styles.title}>On-Duty Hub</Text>
+        <Text style={styles.subtitle}>Choose an option to proceed</Text>
+      </Animated.View>
 
-      {/* Option Buttons */}
-      <View style={styles.optionsContainer}>
-        <TouchableOpacity
-          style={styles.optionButton}
-          onPress={() => handleNavigation('teacherLogin')}
+      {/* Picker for Navigation */}
+      <View style={styles.pickerWrapper}>
+        <Picker
+          selectedValue={selectedOption}
+          onValueChange={(value) => handleNavigation(value)}
+          style={styles.picker}
         >
-          <Text style={styles.optionText}>Teacher Login</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.optionButton}
-          onPress={() => handleNavigation('studentLogin')}
-        >
-          <Text style={styles.optionText}>Student Login</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.optionButton}
-          onPress={() => handleNavigation('hodLogin')}
-        >
-          <Text style={styles.optionText}>HOD Login</Text>
-        </TouchableOpacity>
+          <Picker.Item label="Select an Option" value="" />
+          <Picker.Item label="Teacher Login" value="teacherLogin" />
+          <Picker.Item label="Student Login" value="studentLogin" />
+          <Picker.Item label="HOD Login" value="hodLogin" />
+        </Picker>
       </View>
 
       {/* Footer Section */}
@@ -99,26 +117,23 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: 'center',
   },
-  optionsContainer: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  optionButton: {
-    backgroundColor: '#3498db',
+  pickerWrapper: {
+    width: '85%',
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
     paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-    marginVertical: 10,
-    width: '80%',
-    alignItems: 'center',
-    elevation: 4,
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    marginVertical: 20,
   },
-  optionText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    letterSpacing: 1,
+  picker: {
+    height: 50,
+    width: '100%',
+    color: '#2c3e50',
   },
   footer: {
     marginTop: 40,
