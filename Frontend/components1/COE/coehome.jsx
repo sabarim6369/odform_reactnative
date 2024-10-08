@@ -4,10 +4,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
-import api from "../../api";
-const Teacherhome = ({ navigation, route }) => {
+import api from '../../api';
+const coehome = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { name, email, classs, section, year,department } = route.params;
+  const { name, email, classs, section, year } = route.params;
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -22,44 +22,34 @@ const Teacherhome = ({ navigation, route }) => {
     console.log('Change Password');
     setModalVisible(false);
   };
-  const renderinfo=()=>{
-    let info='';
-    if(year==1){
-info+=` you are the hod of Year:1`
-    }
-    else{
-        info+=`you are the hod from Year:2-4 for the Department:${department}`
-    }
-    return info;
-  }
 const handlebuttons=async(item)=>{
   if (item === 'Check Registered OD') {
     console.log(".....😐😐😐😐😐");
     try {
-        const response = await axios.post(`${api}/registeredodhod`, { year,department});
-        const results = response.data.user;
+        const response = await axios.post(`${api}/registeredodcoe`);
+        const results = response.data.user; 
         console.log(results);
-        navigation.navigate('registeredodhod', { results,year,department, name, email });
+        navigation.navigate('registeredodcoe', { results, name, email });
     } catch (error) {
-        console.error("Error fetching registered OD:", error);
+        console.error("Error fetching registered OD:", error);  
     }
 } else if (item === 'Check Accepted OD History') {
     try {
-        const response = await axios.post(`${api}/acceptedodhod`, { year,department });
+        const response = await axios.post(`${api}/acceptedodcoe`);
         const result = response.data.user;
         console.log(result);
-        let method="acceptedodhod"
+        let method="acceptedodcoe"
         navigation.navigate('acceptedodadvisor', {results:result,method:method});
     } catch (error) {
         console.error("Error fetching accepted OD history:", error);
     }
 } else if (item === 'Check Rejected OD History') {
     try {
-        const response = await axios.post(`${api}/rejectedodhod`, { year,department });
+        const response = await axios.post(`${api}/rejectedodcoe`);
         const result = response.data.user;
         console.log("🙏🙏🙏🙏🙏🙏🙏🎉🎉😍😍❤️‍🔥😍🤣🐦‍🔥🎂😪😒");
         console.log(result);
-        let method="rejectedodhod"
+        let method="rejectedodcoe"
         navigation.navigate('rejectedodadvisor', { results:result,method:method});
     } catch (error) {
         console.error("Error fetching rejected OD history:", error);
@@ -79,8 +69,7 @@ const handlebuttons=async(item)=>{
       </View>
 
       <Text style={styles.info}>
-        {/* {email} - Department:{department}   Year:{year} */}
-        {renderinfo()}
+        {email}
       </Text>
 
       <View style={styles.buttonContainer}>
@@ -211,4 +200,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Teacherhome;
+export default coehome;

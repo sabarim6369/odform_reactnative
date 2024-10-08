@@ -4,10 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import InputModal from '../modalreject'; 
 import {API_BASE_URL} from "@env";
-const ODRequests = ({ navigation, route }) => {
+import api from '../../../api'
+const ODRequests = ({ navigation, route}) => {
     const [result, setResult] = useState([]);
     const { classs, section, year } = route.params;
     const [searchText, setSearchText] = useState('');
+    const {method}=route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedId, setSelectedId] = useState(null); 
     useEffect(() => {
@@ -30,10 +32,21 @@ const ODRequests = ({ navigation, route }) => {
 
     const handleViewDetails = async(id) => {
         console.log(id,"😍😍🐦‍🔥🐦‍🔥🐦‍🔥")
-        const response=await axios.post(`${API_BASE_URL}/viewdetails`,{id});
+        let type="";
+        if(method==="rejectedodhod"){
+         type="rejectedodhod"
+        }
+        else if(method==="rejectedodcoe"){
+            type="rejectedodcoe";
+        }
+        else{
+            type="rejectedodadvisor";
+        }
+        const response=await axios.post(`${api}/viewdetails`,{id,type});
         const od=response.data.user
         console.log(od)
-        navigation.navigate('viewdetails', { od });
+        
+        navigation.navigate('viewdetails', { od});
     };
 
     return (

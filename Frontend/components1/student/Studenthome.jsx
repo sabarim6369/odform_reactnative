@@ -4,6 +4,7 @@
   import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
+import api from '../../api'
   const Dashboard = ({ navigation,route }) => {
     const{user,oddays,odtaken}=route.params;
     console.log("😎😎😎😎😎",user.year);
@@ -36,7 +37,7 @@ const [odDetails, setOdDetails] = useState({ internal: 0, external: 0 });
       setExternalBalance(externalLimit - externalTaken);
     }, [internal, external, internallimit, externallimit]);
   const handleGetonduty=async()=>{
-    const response=await axios.post(`${API_BASE_URL}/odinput`,{email});
+    const response=await axios.post(`${api}/odinput`,{email});
     console.log(response.data) 
 
     const { details, odtaken } = response.data;

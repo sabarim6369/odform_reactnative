@@ -6,8 +6,8 @@ const studentconnection = require("../../mysql/databases/studentdatabase/connect
 const hodconnection=require("../../mysql/databases/hoddatabase/connections/hostconnection")
 
 registeredodroute.post("/registeredodhod", (req, res) => {
-    const { year,departent} = req.body;
-    console.log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<", year,departent);
+    const { year,department} = req.body;
+    console.log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<", year,department);
   if(year===1){
     const query = `select * from acceptedod where presentyear=?`;
     teacherconnection.query(query, [year], (err, result) => {
@@ -27,8 +27,8 @@ registeredodroute.post("/registeredodhod", (req, res) => {
 
   }
   else{
-    const query = `select * from acceptedod where presentyear>1 and department=?`;
-    teacherconnection.query(query, [year,departent], (err, result) => {
+    const query = `select * from acceptedod where presentyear>1 and classs=?`;
+    teacherconnection.query(query, [year,department], (err, result) => {
         if (err) {
             console.log("error",err)
             return res.status(400).json({ message: "internal server error" });

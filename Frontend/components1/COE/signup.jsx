@@ -16,14 +16,14 @@ const Signup = ({ navigation }) => {
   const [selectedSection, setSelectedSection] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false); 
   const [modalMessage, setModalMessage] = useState(''); 
- 
+
   const handleSignup = async() => {
-    if (name && email && password && confirmPassword && selectedYear && selectedClass) {
+    if (name && email && password && confirmPassword) {
       if (password === confirmPassword) {
         try {
-          const response = await axios.post(`${api}/hodsignup`, { name, email, password, selectedYear, selectedClass});
+          const response = await axios.post(`${api}/coesignup`, { name, email, password});
           Alert.alert("Signup Successful", response.data.message, [
-            { text: "OK", onPress: () => navigation.navigate('hodLogin') }
+            { text: "OK", onPress: () => navigation.navigate('coeLogin') }
           ]);
         } catch (error) {
           const errorMessage = error.response?.data?.message || 'Server error. Please try again.';
@@ -39,7 +39,7 @@ const Signup = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('hodLogin')}>
+      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('coeLogin')}>
         <Text style={styles.loginButtonText}>Go to Login</Text>
       </TouchableOpacity>
 
@@ -61,41 +61,11 @@ const Signup = ({ navigation }) => {
         autoCapitalize="none"
       />
 
-      {/* Select Year */}
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedYear}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedYear(itemValue)}
-        >
-          <Picker.Item label="Select Year" value="" />
-          <Picker.Item label="1st Year" value="1" />
-          <Picker.Item label="2nd Year" value="2" />
-          <Picker.Item label="3rd Year" value="3" />
-          <Picker.Item label="4th Year" value="4" />
-        </Picker>
-      </View>
+    
 
-      {/* Select Class */}
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedClass}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedClass(itemValue)}
-        >
-          <Picker.Item label="Select Department" value="" />
-          <Picker.Item label="CSE" value="CSE" />
-          <Picker.Item label="AIDS" value="AIDS" />
-          <Picker.Item label="ECE" value="ECE" />
-          <Picker.Item label="EEE" value="EEE" />
-          <Picker.Item label="IT" value="IT" />
-          <Picker.Item label="CSBS" value="CSBS" />
-          <Picker.Item label="CCE" value="CCE" />
-          <Picker.Item label="MECH" value="MECH" />
-        </Picker>
-      </View>
+     
 
-   
+    
       <TextInput
         style={styles.input}
         placeholder="Enter Password"

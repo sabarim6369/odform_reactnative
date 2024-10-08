@@ -63,6 +63,7 @@ function Home({ navigation }) {
           <Picker.Item label="Teacher Login" value="teacherLogin" />
           <Picker.Item label="Student Login" value="studentLogin" />
           <Picker.Item label="HOD Login" value="hodLogin" />
+          <Picker.Item label="COE Login" value="coeLogin" />
         </Picker>
       </View>
 

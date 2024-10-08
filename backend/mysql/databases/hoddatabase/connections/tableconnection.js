@@ -8,4 +8,6 @@ hodconnection.getConnection((err) => {
     }
   });
   require("../tables/signuptable")
-  require("../tables/acceptedodhod")
+  require("../tables/acceptedodhodinternal")
+  require("../tables/acceptedodhodexternal")
+  require("../tables/rejectedodhod")

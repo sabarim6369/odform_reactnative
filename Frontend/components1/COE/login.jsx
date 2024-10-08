@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityInd
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import Modal from 'react-native-modal'; 
 import axios from 'axios';
-import {API_BASE_URL} from '@env';
+import {API_BASE_URL} from "@env";
 import api from '../../api'
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -22,19 +22,18 @@ const Login = ({ navigation }) => {
 
     setLoading(true); 
     try {
-      
-      const response = await axios.post(`${api}/hodlogin`, { email, password });
+      const response = await axios.post(`${api}/coeLogin`, { email, password });
       if (response.status === 200) {
         const message = response.data.message || 'Login successful';
         Alert.alert('Success', message); 
         console.log("😐😐😐😐😐😍😍😐",response.data.user.username)
         console.log("😐😐😐😐😐😍😍😐",response.data.user.year)
             
-             const name=response.data.user.username
-             const department=response.data.user.department
-             console.log("......./////......///",department)
+             const name=response.data.user.username;
+             const classs=response.data.user.classhandling;
+             const section=response.data.user.section;
              const year=response.data.user.year;
-        navigation.navigate('hodhome', {name:name,email:email,year:year,department:department});
+        navigation.navigate('coehome', {name:name,email:email,classs:classs,section:section,year:year});
       } else {
         const message = response.data.message || 'Login failed. Please check your credentials.';
         Alert.alert('Error', message); 
@@ -62,7 +61,7 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}> HOD Login</Text>
+      <Text style={styles.title}>COE Login</Text>
 
       <TextInput
         style={styles.input}
@@ -100,7 +99,7 @@ const Login = ({ navigation }) => {
 
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('hodSignup')}>
+        <TouchableOpacity onPress={() => navigation.navigate('coesignup')}>
           <Text style={styles.signupLink}>Sign Up</Text>
         </TouchableOpacity>
       </View>

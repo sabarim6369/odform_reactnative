@@ -1,7 +1,7 @@
 
-const hodconnection = require("../connections/hostconnection");
+const coeconnection = require("../connections/hostconnection");
 const query=`
-create table if not exists acceptedodhod(
+create table if not exists subfinal(
   id INT AUTO_INCREMENT PRIMARY KEY,
    email varchar(100),
    rollno varchar(100),
@@ -22,11 +22,11 @@ create table if not exists acceptedodhod(
 )
 `
 
-const acceptedhod=hodconnection.query(query, (err, results) => {
+const subfinal=coeconnection.query(query, (err, results) => {
     if (err) {
         console.error("Error creating table:", err.message);
     } else {
-        console.log("Table 'acceptedodhod' created successfully");
+        console.log("Table 'subfinal' created successfully");
     }
 });
-module.exports=acceptedhod
+module.exports=subfinal

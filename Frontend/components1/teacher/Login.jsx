@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal'; 
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
+import api from '../../api'
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +22,7 @@ const Login = ({ navigation }) => {
 
     setLoading(true); 
     try {
-      const response = await axios.post(`${API_BASE_URL}/teacherlogin`, { email, password });
+      const response = await axios.post(`${api}/teacherlogin`, { email, password });
       if (response.status === 200) {
         const message = response.data.message || 'Login successful';
         Alert.alert('Success', message); 

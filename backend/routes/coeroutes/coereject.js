@@ -1,15 +1,16 @@
 const express = require("express");
-const hodreject = express.Router();
+const coereject = express.Router();
 const studentconnection = require("../../mysql/databases/studentdatabase/connections/hostconnection");
 const teacherconnection = require("../../mysql/databases/teacherdatabase/connections/hostconnection");
+const coeconnection = require("../../mysql/databases/coedatabase/connections/hostconnection");
 const hodconnection=require("../../mysql/databases/hoddatabase/connections/hostconnection");
-hodreject.post("/hodreject", (req, res) => {
-    const { id, department, year, reasonofrejection, name, email } = req.body;        
+coereject.post("/coereject", (req, res) => {
+    const { id, reasonofrejection, name, email } = req.body;        
 
     console.log("ID to fetch details:", id);
 
-    const query = `SELECT * FROM acceptedod WHERE id=?`;
-    teacherconnection.query(query, [id], (err, results) => {
+    const query = `SELECT * FROM acceptedodhodexternal WHERE id=?`;
+    hodconnection.query(query, [id], (err, results) => {
         if (err) {
             console.log("Error fetching student details:", err);
             return res.status(500).json({ message: "Error fetching student details" });
@@ -34,11 +35,11 @@ hodreject.post("/hodreject", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            tid
         } = results[0]; 
-
         const insertQuery = `
-        INSERT INTO rejectedodhod (
+        INSERT INTO rejectedodcoe (
             email, 
             rollno, 
             username, 
@@ -60,32 +61,10 @@ hodreject.post("/hodreject", (req, res) => {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        const insertQuery1 = `
-        INSERT INTO rejectedod (
-            email, 
-            rollno, 
-            username, 
-            classs, 
-            section, 
-            reason, 
-            applieddate, 
-            startdate, 
-            enddate, 
-            total_days, 
-            relatedto, 
-            pdf, 
-            photo, 
-            presentyear, 
-            odtype, 
-            year,
-            reasonofrejection,
-            rejectedby
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-
+        
         const rejectedBy = `${name} (${email})`;
 
-        hodconnection.query(insertQuery, [
+        coeconnection.query(insertQuery, [
             studentEmail, // Use student's email
             rollno,
             username,
@@ -109,43 +88,23 @@ hodreject.post("/hodreject", (req, res) => {
                 console.log("Error inserting rejected OD:", insertErr);
                 return res.status(500).json({ message: "Error inserting rejected OD" });
             }
-
-         
-            teacherconnection.query(insertQuery1, [
-                studentEmail, // Use student's email
-                rollno,
-                username,
-                classs,
-                section,
-                reason,
-                applieddate,
-                startdate,
-                enddate,
-                total_days,
-                relatedto,
-                pdf,
-                photo,
-                presentyear,
-                odtype,
-                year,
-                reasonofrejection,
-                rejectedBy // Add name and email to rejectedby column
-            ], (insertErr1, insertResults1) => {
-                if (insertErr1) {
-                    console.log("Error inserting rejected OD:", insertErr);
-                    return res.status(500).json({ message: "Error inserting rejected OD" });
-                }
-            const deleteQuery = `DELETE FROM acceptedod WHERE id=?`;
-            teacherconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
+            
+            const deleteQuery = `DELETE FROM acceptedodhodexternal WHERE id=?`;
+            hodconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
                 if (delErr) {
                     console.log("Error deleting rejected OD:", delErr);
                     return res.status(500).json({ message: "Error deleting rejected OD" });
                 }
-               
-                return res.status(201).json({ message: "OD rejected successfully"});
+                const teacherdeletequery="delete from acceptedod where id=?";
+                teacherconnection.query(teacherdeletequery,[tid],(err,teacherdel)=>{
+                    if(err){
+                        console.log("error",teacherdel);
+                    }
+                return res.status(201).json({ message: "OD rejected successfully" });
             });
+        })
         });
     });
 });
-});
-module.exports = hodreject
+
+module.exports = coereject;

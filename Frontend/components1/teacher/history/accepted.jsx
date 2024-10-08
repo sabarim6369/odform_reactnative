@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import InputModal from '../modalreject'; 
+import InputModal from '../modalreject';
+import api from '../../../api' 
 import {API_BASE_URL} from "@env";
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
     const { classs, section, year } = route.params;
+    const{method}=route.params;
     const [searchText, setSearchText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedId, setSelectedId] = useState(null); 
@@ -28,12 +30,30 @@ const ODRequests = ({ navigation, route }) => {
    
     
 
-    const handleViewDetails = async(id) => {
+    const handleViewDetails = async(id,odtype) => {
         console.log(id,"😍😍🐦‍🔥🐦‍🔥🐦‍🔥")
-        const response=await axios.post(`${API_BASE_URL}/viewdetails`,{id});
+        let type='';
+
+      if(method==="acceptedodhod"){
+        if(odtype==="internal"){
+            type="acceptedodhodinternal";
+        }
+        else{
+            type="acceptedodhodexternal"
+        }
+            
+      }
+      else if(method==="acceptedodcoe"){
+        type="acceptedodcoe"
+      }
+      else{
+        type="acceptedodadvisor";
+      }
+        const response=await axios.post(`${api}/viewdetails`,{id,type});
         const od=response.data.user
         console.log(od)
-        navigation.navigate('viewdetails', { od });
+       
+        navigation.navigate('viewdetails', { od});
     };
 
     return (
@@ -68,7 +88,7 @@ const ODRequests = ({ navigation, route }) => {
                                 <Text style={styles.odTypeText}>{item.odtype || "Not Specified"}</Text>
                             </View>
                             <View style={styles.actionButtons}>
-                                <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id)}>
+                                <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id,item.odtype)}>
                                     <Text style={styles.buttonText}>View Details</Text>
                                 </TouchableOpacity>
                                 {/* <TouchableOpacity style={[styles.button, styles.acceptButton]} onPress={() => handleAccept(item)}>

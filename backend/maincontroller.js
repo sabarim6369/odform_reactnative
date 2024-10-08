@@ -1,10 +1,12 @@
 const express=require("express");
 const mainrouter=express.Router();
-const studentroutes=require("./controllers/studentcontroller");
-const teacherroutes=require("./controllers/teachercontroller")
-const hodroutes=require("./controllers/hodcontroller")
+const studentcontroller=require("./controllers/studentcontroller");
+const teachercontroller=require("./controllers/teachercontroller")
+const hodcontroller=require("./controllers/hodcontroller");
+const coecontroller = require("./controllers/coecontroller");
 
-mainrouter.use("/",studentroutes);
-mainrouter.use("/",teacherroutes);
-mainrouter.use("/",hodroutes);
+mainrouter.use("/",studentcontroller);
+mainrouter.use("/",teachercontroller);
+mainrouter.use("/",hodcontroller);
+mainrouter.use("/",coecontroller);
 module.exports=mainrouter;

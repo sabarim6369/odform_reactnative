@@ -4,6 +4,7 @@ import Modal from 'react-native-modal';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
+import api from '../../api'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const Signup = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -42,7 +43,7 @@ const Signup = ({ navigation }) => {
   const handleSignup = async () => {
     if (validateForm()) {
       try {
-        const response = await axios.post(`${API_BASE_URL}/signup`, {
+        const response = await axios.post(`${api}/signup`, {
           email, password, username, classHandling, section, rollNo, year
         });
         

@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import InputModal from './modalreject'; 
+import InputModal from '../teacher/modalreject'; 
 import {API_BASE_URL} from "@env";
 import api from '../../api'
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
-    const { classs, section, year, name, email } = route.params;
+    const { results,name, email } = route.params;
     const [searchText, setSearchText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedId, setSelectedId] = useState(null); 
 
     useEffect(() => {
-        if (route.params && route.params.result) {
-            setResult(route.params.result);
+        if (route.params && route.params.results) {
+            setResult(route.params.results);
         } else {
             console.error("No result provided via route.params");
         }
@@ -34,11 +34,8 @@ const ODRequests = ({ navigation, route }) => {
         console.log("Reason entered:", reason);
         if (reason && reason.trim() !== "") {
             try {
-                const response = await axios.post(`${api}/advisorreject`, {
+                const response = await axios.post(`${api}/coereject`, {
                     id: selectedId,
-                    classs,
-                    section,
-                    year,
                     reasonofrejection: reason,
                     name,
                     email
@@ -69,7 +66,7 @@ const ODRequests = ({ navigation, route }) => {
                     text: "OK",
                     onPress: async () => {
                         try {
-                            const response = await axios.post(`${api}/advisoraccept`, { item, classs, section, year });
+                            const response = await axios.post(`${api}/coeaccept`, { item});
                             if (response.status === 201) {
                                 setResult(prevResults => prevResults.filter(od => od.id !== item.id));
                                 Alert.alert("Success", response.data.message, [{ text: "OK" }]);
@@ -85,13 +82,20 @@ const ODRequests = ({ navigation, route }) => {
         );
     };
 
-    const handleViewDetails = async (id) => {
+    const handleViewDetails = async (id,odtype) => {
         console.log(id, "😍😍🐦‍🔥🐦‍🔥🐦‍🔥");
-        let type="registeredodadvisor";
+        let type=""
+        if(odtype==="internal"){
+             type="registeredodcoeinternal"
+        }
+        else{
+             type="registeredodcoeexternal"
+        }
+        
         const response = await axios.post(`${api}/viewdetails`, { id,type});
         const od = response.data.user;
         console.log(od);
-        navigation.navigate('viewdetails', { od});
+        navigation.navigate('viewdetails', { od });
     };
 
     return (
@@ -99,7 +103,7 @@ const ODRequests = ({ navigation, route }) => {
             <View style={styles.topRight}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate('TeacherHome')}
+                    onPress={() => navigation.navigate('coehome')}
                 >
                     <Text style={styles.buttonText}>Back to Home</Text>
                 </TouchableOpacity>
@@ -128,7 +132,7 @@ const ODRequests = ({ navigation, route }) => {
                             </View>
                             
                             <View style={styles.actionButtons}>
-                                <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id)}>
+                                <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id,item.odtype)}>
                                     <Text style={styles.buttonText}>View Details</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.button, styles.acceptButton]} onPress={() => handleAccept(item)}>

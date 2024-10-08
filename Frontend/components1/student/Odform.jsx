@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { storage } from '../../config'; // Make sure to import the storage correctly
+import { storage } from '../../config';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as FileSystem from 'expo-file-system';
@@ -22,6 +22,7 @@ import { Picker } from '@react-native-picker/picker';
 import Modal from 'react-native-modal';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
+import api from '../../api'
 import {API_BASE_URL} from "@env";
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const Odform = ({ navigation, route }) => {
@@ -162,7 +163,7 @@ console.log("internalawailed",internalawailed)
     } catch (error) {
       console.error("Error picking an image:", error);
     }
-  };
+  };  
   
 
   const openPdf = async (uri) => {
@@ -297,7 +298,7 @@ console.log("internalawailed",internalawailed)
     
     try {
       console.log("😎😎😎😎😎😎",photo)
-      const response = await axios.post(`${API_BASE_URL}/odform`, {
+      const response = await axios.post(`${api}/odform`, {
         email,
         rollno,
         name,
@@ -317,7 +318,7 @@ console.log("internalawailed",internalawailed)
       });
 
       console.log("Form submitted successfully", response.data);
-      const response1=await axios.post("http://172.16.127.53:5000/odform2",{email});
+      const response1=await axios.post(`${api}/odform2`,{email});
       if (response1.status === 200) {
         const message = response1.data.message || 'OD applied successfully';
         Alert.alert('Success', message);

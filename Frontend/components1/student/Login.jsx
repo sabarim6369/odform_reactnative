@@ -5,6 +5,7 @@ import Modal from 'react-native-modal';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import {API_BASE_URL} from "@env";
+import api from '../../api'
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +16,7 @@ const Login = ({ navigation }) => {
     console.log("😒😒😒😒😒😒😪🐦‍🔥😐👏❤️‍🔥😤😎😪🎂🎉🤣😎",{API_BASE_URL})
     if (email && password) {
         try {
-            const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
+            const response = await axios.post(`${api}/login`, { email, password });
 
             if (response.status === 200) {
                 const message = response.data.message || 'Login successful';

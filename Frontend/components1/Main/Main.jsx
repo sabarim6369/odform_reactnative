@@ -16,6 +16,11 @@ import advisorviewdetails from '../teacher/viewdetails';
 import acceptedod from './../teacher/history/accepted';
 import rejectedod from './../teacher/history/rejected'
 import hodhome from '../hod/hodhome';
+import registeredhod from '../hod/registeredod'
+import coehome from '../COE/coehome';
+import coelogin from '../COE/login';
+import coesignup from '../COE/signup';
+import registeredodcoe from '../COE/registeredod';
 const Stack = createStackNavigator();
 
 function Main() {
@@ -52,7 +57,19 @@ function Main() {
       <Stack.Screen name="hodLogin" component={hodLogin}options={{ headerShown: false }}/>
       <Stack.Screen name="hodSignup" component={hodSignup}options={{ headerShown: false }}/>
       <Stack.Screen name="hodhome" component={hodhome}options={{ headerShown: false }}/>
+      <Stack.Screen name="registeredodhod" component={registeredhod}options={{ headerShown: false }}/>
+
+     {/* COE routes */}
+     <Stack.Screen name="coehome" component={coehome}options={{ headerShown: false }}/>
+     <Stack.Screen name="coeLogin" component={coelogin}options={{ headerShown: false }}/>
+     <Stack.Screen name="coesignup" component={coesignup}options={{ headerShown: false }}/>
+     <Stack.Screen name="registeredodcoe" component={registeredodcoe}options={{ headerShown: false }}/>
+
+
+
     </Stack.Navigator>
+
+      
   );
 }
 

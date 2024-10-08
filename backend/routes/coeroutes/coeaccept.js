@@ -2,18 +2,19 @@
 
 const express = require("express");
 const nodemailer = require("nodemailer");
-const hodaccept = express.Router();
+const coeaccept = express.Router();
 const studentconnection = require("../../mysql/databases/studentdatabase/connections/hostconnection");
 const teacherconnection = require("../../mysql/databases/teacherdatabase/connections/hostconnection");
 const hodconnection=require("../../mysql/databases/hoddatabase/connections/hostconnection");
-hodaccept.post("/hodaccept", (req, res) => {
-    const { item, classs, section, year } = req.body;  
+const coeconnection = require("../../mysql/databases/coedatabase/connections/hostconnection");
+coeaccept.post("/coeaccept", (req, res) => {
+    const { item} = req.body;  
     const id = item.id;            
 
     console.log("ID to fetch details:", id);
 
-    const query = `SELECT * FROM acceptedod WHERE id=?`;
-    teacherconnection.query(query, [id], (err, results) => {
+    const query = `SELECT * FROM acceptedodhodexternal WHERE id=?`;
+    hodconnection.query(query, [id], (err, results) => {
         if (err) {
             console.log("Error fetching student details:", err);
             return res.status(500).json({ message: "Error fetching student details" });
@@ -43,10 +44,8 @@ hodaccept.post("/hodaccept", (req, res) => {
         } = results[0]; 
 
         const studentEmail = email;
-        const tableName = odtype === 'internal' ? 'acceptedodhodinternal' : 'acceptedodhodexternal';
-        
         const insertQuery = `
-        INSERT INTO ${tableName}(
+        INSERT INTO acceptedodcoe(
             email, 
             rollno, 
             username, 
@@ -62,11 +61,10 @@ hodaccept.post("/hodaccept", (req, res) => {
             photo, 
             presentyear, 
             odtype, 
-            year,
-            tid
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+            year
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        hodconnection.query(insertQuery, [
+        coeconnection.query(insertQuery, [
             email,
             rollno,
             username,
@@ -82,23 +80,22 @@ hodaccept.post("/hodaccept", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year,
-            id
+            year
         ], (insertErr, insertResults) => {
             if (insertErr) {
                 console.log("Error inserting accepted OD:", insertErr);
                 return res.status(500).json({ message: "Error inserting accepted OD" });
             }
             
-            const deleteQuery = `DELETE FROM acceptedod WHERE id=?`;
-            teacherconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
+            const deleteQuery = `DELETE FROM acceptedodhodexternal WHERE id=?`;
+            hodconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
                 if (delErr) {
                     console.log("Error deleting accepted OD:", delErr);
                     return res.status(500).json({ message: "Error deleting accepted OD" });
                 }
                 if(year===1){
-                    const fetchQuery = `SELECT * FROM acceptedod WHERE presentyear=?`;
-                    teacherconnection.query(fetchQuery, [year], (fetchErr, fetchResult) => {
+                    const fetchQuery = `SELECT * FROM acceptedodhodexternal WHERE presentyear=?`;
+                   hodconnection.query(fetchQuery, [year], (fetchErr, fetchResult) => {
                         if (fetchErr) {
                             console.log("Error fetching remaining OD details:", fetchErr);
                             return res.status(500).json({ message: "Internal server error" });
@@ -109,8 +106,8 @@ hodaccept.post("/hodaccept", (req, res) => {
                     });
                 }
                 else{
-                    const fetchQuery = `SELECT * FROM acceptedod WHERE classs=? AND presentyear>1`;
-                    teacherconnection.query(fetchQuery, [classs, year], (fetchErr, fetchResult) => {
+                    const fetchQuery = `SELECT * FROM acceptedodhodexternal WHERE classs=? AND presentyear>1`;
+                    hodconnection.query(fetchQuery, [classs, year], (fetchErr, fetchResult) => {
                         if (fetchErr) {
                             console.log("Error fetching remaining OD details:", fetchErr);
                             return res.status(500).json({ message: "Internal server error" });
@@ -126,4 +123,4 @@ hodaccept.post("/hodaccept", (req, res) => {
     });
 });
 
-module.exports = hodaccept;
+module.exports = coeaccept;

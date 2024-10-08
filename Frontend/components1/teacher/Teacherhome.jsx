@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
+import api from '../../api'
 const Teacherhome = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { name, email, classs, section, year } = route.params;
@@ -25,7 +26,7 @@ const handlebuttons=async(item)=>{
   if (item === 'Check Registered OD') {
     console.log(".....😐😐😐😐😐");
     try {
-        const response = await axios.post(`${API_BASE_URL}/registeredodadvisor`, { classs, section, year });
+        const response = await axios.post(`${api}/registeredodadvisor`, { classs, section, year });
         const result = response.data.user;  // Removed redundant await
         console.log(result);
         navigation.navigate('registeredodadvisor', { result, classs, section, year, name, email });
@@ -34,7 +35,7 @@ const handlebuttons=async(item)=>{
     }
 } else if (item === 'Check Accepted OD History') {
     try {
-        const response = await axios.post(`${API_BASE_URL}/acceptedodadvisor`, { classs, section, year });
+        const response = await axios.post(`${api}/acceptedodadvisor`, { classs, section, year });
         const result = response.data.user;
         console.log(result);
         navigation.navigate('acceptedodadvisor', {results:result});
@@ -43,7 +44,7 @@ const handlebuttons=async(item)=>{
     }
 } else if (item === 'Check Rejected OD History') {
     try {
-        const response = await axios.post(`${API_BASE_URL}/rejectedodadvisor`, { classs, section, year });
+        const response = await axios.post(`${api}/rejectedodadvisor`, { classs, section, year });
         const result = response.data.user;
         console.log("🙏🙏🙏🙏🙏🙏🙏🎉🎉😍😍❤️‍🔥😍🤣🐦‍🔥🎂😪😒");
         console.log(result);
