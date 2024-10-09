@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     right: wp('5%'), // 5% of screen width
   },
   homeButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('1.5%'), // 1.5% of screen height
     paddingHorizontal: wp('4%'), // 4% of screen width
     borderRadius: wp('2%'),
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     height: hp('7%'), // Password input height responsive
   },
   submitButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('2%'), // Button height
     borderRadius: wp('2%'),
     alignItems: 'center',
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
   },
   signupLink: {
-    color: '#4caf50',
+    color: '#007bffc4',
     fontWeight: 'bold',
     fontSize: wp('4%'),
   },

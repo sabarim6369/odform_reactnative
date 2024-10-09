@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     height: hp('6%'), // Height based on screen height
   },
   signupButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('1.5%'), // Padding based on screen height
     borderRadius: wp('3%'), // Border radius based on screen width
     alignItems: 'center',
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'), // Margin based on screen height
   },
   closeButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('1.5%'), // Padding based on screen height
     paddingHorizontal: wp('5%'), // Padding based on screen width
     borderRadius: wp('3%'), // Border radius based on screen width

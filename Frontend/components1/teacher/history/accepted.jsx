@@ -91,12 +91,6 @@ const ODRequests = ({ navigation, route }) => {
                                 <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id,item.odtype)}>
                                     <Text style={styles.buttonText}>View Details</Text>
                                 </TouchableOpacity>
-                                {/* <TouchableOpacity style={[styles.button, styles.acceptButton]} onPress={() => handleAccept(item)}>
-                                    <Text style={styles.buttonText}>Accept</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.button, styles.rejectButton]} onPress={() => handleReject(item.id)}>
-                                    <Text style={styles.buttonText}>Reject</Text>
-                                </TouchableOpacity> */}
                             </View>
                         </View>
                     )) : (

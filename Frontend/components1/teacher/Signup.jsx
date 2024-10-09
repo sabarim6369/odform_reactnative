@@ -39,9 +39,9 @@ const Signup = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('teacherLogin')}>
+      {/* <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('teacherLogin')}>
         <Text style={styles.loginButtonText}>Go to Login</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <Text style={styles.title}>Sign Up</Text>
 
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: hp('7%'),
     right: wp('5%'),
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('1.5%'),
     paddingHorizontal: wp('4%'),
     borderRadius: 5,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signupButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('2%'),
     borderRadius: 10,
     alignItems: 'center',
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   closeButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('1.5%'),
     paddingHorizontal: wp('5%'),
     borderRadius: 5,

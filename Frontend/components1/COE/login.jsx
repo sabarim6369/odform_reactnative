@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   homeButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   submitButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   signupLink: {
-    color: '#4caf50',
+    color: '#007bffc4',
     fontWeight: 'bold',
   },
   modalContainer: {
