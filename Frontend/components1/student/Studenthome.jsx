@@ -36,6 +36,12 @@ const [odDetails, setOdDetails] = useState({ internal: 0, external: 0 });
     setInternalBalance(internalLimit - internalTaken);
     setExternalBalance(externalLimit - externalTaken);
   }, [internal, external, internallimit, externallimit]);
+  const previousod=async()=>{
+    let category="inProgressAdvisor"
+    const response=await axios.post(`${api}/fetchResultsByCategory`,{category:category,email:email});
+    console.log(response.data.results);
+    navigation.navigate("Previousod",{results:response.data.results,email:email})
+  }
 const handleGetonduty=async()=>{
   const response=await axios.post(`${api}/odinput`,{email});
   console.log(response.data) 
@@ -126,7 +132,7 @@ const handleGetonduty=async()=>{
         <TouchableOpacity style={styles.button} onPress={handleGetonduty}>
           <Text style={styles.buttonText}>Get On-Duty Letter</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Previousod', { id: email })}>
+        <TouchableOpacity style={styles.button} onPress={previousod}>
           <Text style={styles.buttonText}>View Previous ODs</Text>
         </TouchableOpacity>
       </View>

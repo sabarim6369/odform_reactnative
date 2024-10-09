@@ -7,9 +7,9 @@ import api from '../../api';
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
     const [searchText, setSearchText] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('inProgressAdvisor'); // State for selected category
+    const [selectedCategory, setSelectedCategory] = useState('inProgressAdvisor'); 
 
-    const { classs, section, year, method } = route.params;
+    const { method, email } = route.params;
 
     useEffect(() => {
         if (route.params && route.params.results) {
@@ -19,37 +19,70 @@ const ODRequests = ({ navigation, route }) => {
         }
     }, [route.params]);
 
-    // Filter results based on search text and selected category
-    const filteredResults = result.filter(item =>
-        (item.username.toLowerCase().includes(searchText.toLowerCase()) || item.rollno.toString().includes(searchText)) &&
-        item.category === selectedCategory // Category filter
+    const fetchResultsByCategory = async (category) => {
+        console.log("Fetching results for category:", category);
+        try {
+            const response = await axios.post(`${api}/fetchResultsByCategory`, { category, email });
+            console.log("Fetched results:", response.data.results);
+            setResult(response.data.results);
+        } catch (error) {
+            console.error("Error fetching results:", error);
+            Alert.alert("Error", "Could not fetch results. Please try again later.");
+        }
+    };
+    
+    const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+        fetchResultsByCategory(category);
+    };
+
+    const filteredResults = result.filter(item => 
+        item.username.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    const handleViewDetails = async (id, odtype) => {
+    const handleViewDetails = async (id, odtype,category) => {
         let type = '';
 
-        if (method === "acceptedodhod") {
-            type = odtype === "internal" ? "acceptedodhodinternal" : "acceptedodhodexternal";
-        } else if (method === "acceptedodcoe") {
-            type = "acceptedodcoe";
-        } else {
+        if (category === "inProgressAdvisor") {
+            type ="registeredodadvisor";
+        } else if (category === "inProgressHOD") {
+            type = "acceptedodadvisor";
+        } 
+        else if(category==="inProgresscoe"){
+            type="acceptedodhodexternal"
+        }
+        else if(category==="inProgressJioTag"){
+            type="acceptedodcoe";
+        }
+        else if(category==="accepted"){
+            
+        }
+        else if(category==="rejected"){
+
+        }
+        else {
             type = "acceptedodadvisor";
         }
 
-        const response = await axios.post(`${api}/viewdetails`, { id, type });
-        const od = response.data.user;
-        navigation.navigate('viewdetails', { od });
+        try {
+            const response = await axios.post(`${api}/viewdetails`, { id, type });
+            const od = response.data.user;
+            navigation.navigate('viewdetails', { od });
+        } catch (error) {
+            console.error("Error fetching details:", error);
+            Alert.alert("Error", "Could not fetch details. Please try again later.");
+        }
     };
 
-    // Categories for buttons
     const categories = [
         { key: 'inProgressAdvisor', label: 'In-progress (Advisor)' },
         { key: 'inProgressHOD', label: 'In-progress (HOD)' },
+        { key: 'inProgresscoe', label: 'In-progress (COE)' },
         { key: 'inProgressJioTag', label: 'In-progress (JioTag)' },
         { key: 'accepted', label: 'Accepted' },
         { key: 'rejected', label: 'Rejected' }
     ];
-
+    
     return (
         <View style={styles.container}>
             <View style={styles.topRight}>
@@ -74,46 +107,58 @@ const ODRequests = ({ navigation, route }) => {
             </View>
 
             <View style={styles.buttonContainer}>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {categories.map(category => (
-            <TouchableOpacity
-                key={category.key}
-                style={[
-                    styles.filterButton,
-                    selectedCategory === category.key ? styles.activeButton : styles.inactiveButton
-                ]}
-                onPress={() => setSelectedCategory(category.key)}
-            >
-                <Text style={styles.buttonText}>{category.label}</Text>
-            </TouchableOpacity>
-        ))}
-    </ScrollView>
-</View>
-
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {categories.map(category => (
+                        <TouchableOpacity
+                            key={category.key}
+                            style={[styles.filterButton, selectedCategory === category.key ? styles.activeButton : styles.inactiveButton]}
+                            onPress={() => handleCategorySelect(category.key)}
+                        >
+                            <Text style={styles.buttonText}>{category.label}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
 
             <ScrollView>
-                <View style={styles.cardContainer}>
-                    {filteredResults.length > 0 ? filteredResults.map((item) => (
-                        <View key={item.id} style={styles.card}>
-                            <Text style={styles.cardTitle}>{item.username}</Text>
-                            <Text style={styles.cardText}>Roll No: {item.rollno}</Text>
-                            <Text style={styles.cardText}>Reason: {item.reason}</Text>
-                            <Text style={styles.cardText}>Total Days: {item.total_days}</Text>
-                            <View style={styles.odTypeBox}>
-                                <Text style={styles.odTypeText}>{item.odtype || "Not Specified"}</Text>
-                            </View>
-                            <View style={styles.actionButtons}>
-                                <TouchableOpacity style={[styles.button, styles.viewButton]} onPress={() => handleViewDetails(item.id, item.odtype)}>
-                                    <Text style={styles.buttonText}>View Details</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )) : (
-                        <View style={styles.noDataContainer}>
-                            <Text style={styles.noDataText}>No OD Requests available</Text>
-                        </View>
-                    )}
-                </View>
+              <View style={styles.cardContainer}>
+  {filteredResults.length > 0 ? filteredResults.map((item) => (
+    <View key={item.id} style={styles.card}>
+      <Text style={styles.cardTitle}>{item.username}</Text>
+      <Text style={styles.cardText}>Roll No: {item.rollno}</Text>
+      <Text style={styles.cardText}>Reason: {item.reason}</Text>
+      <Text style={styles.cardText}>Total Days: {item.total_days}</Text>
+      
+      <View style={styles.odTypeBox}>
+        <Text style={styles.odTypeText}>{item.odtype || "Not Specified"}</Text>
+      </View>
+      
+      <View style={styles.actionButtons}>
+        <TouchableOpacity 
+          style={[styles.button, styles.viewButton]} 
+          onPress={() => handleViewDetails(item.id, item.odtype, selectedCategory)}
+        >
+          <Text style={styles.buttonText}>View Details</Text>
+        </TouchableOpacity>
+
+        {/* Conditionally render the "Upload JioTag" button if selectedCategory is "inProgressJioTag" */}
+        {selectedCategory === "inProgressJioTag" && (
+          <TouchableOpacity 
+            style={[styles.button, styles.uploadJioTagButton]} 
+            onPress={() => handleUploadJioTag(item.id)}
+          >
+            <Text style={styles.buttonText}>Upload JioTag</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  )) : (
+    <View style={styles.noDataContainer}>
+      <Text style={styles.noDataText}>No OD Requests available</Text>
+    </View>
+  )}
+</View>
+
             </ScrollView>
         </View>
     );
@@ -214,11 +259,14 @@ const styles = StyleSheet.create({
     },
     actionButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         marginTop: 10,
     },
     viewButton: {
         backgroundColor: '#007BFF',
+        padding: 10,
+        borderRadius: 5,
+        elevation: 2,
     },
     noDataContainer: {
         alignItems: 'center',

@@ -27,6 +27,7 @@ const ViewDetails = ({ route }) => {
                         <Text style={styles.detailText}><Text style={styles.boldText}>Username:</Text> {od.username}</Text>
                         <Text style={styles.detailText}><Text style={styles.boldText}>Class:</Text> {od.classs}</Text>
                         <Text style={styles.detailText}><Text style={styles.boldText}>Section:</Text> {od.section}</Text>
+                        <Text style={styles.detailText}><Text style={styles.boldText}>year:</Text> {od.presentyear}</Text>
                     </View>
 
                     <Text style={styles.subHeader}>OD Details</Text>
@@ -36,8 +37,19 @@ const ViewDetails = ({ route }) => {
                         <Text style={styles.detailText}><Text style={styles.boldText}>Start Date:</Text> {od.startdate}</Text>
                         <Text style={styles.detailText}><Text style={styles.boldText}>End Date:</Text> {od.enddate}</Text>
                         <Text style={styles.detailText}><Text style={styles.boldText}>Total Days:</Text> {od.total_days}</Text>
-                        <Text style={styles.detailText}><Text style={styles.boldText}>Related To:</Text> {od.relatedto}</Text>
+                        {/* <Text style={styles.detailText}><Text style={styles.boldText}>Related To:</Text> {od.relatedto}</Text> */}
                         <Text style={styles.detailText}><Text style={styles.boldText}>OD Type:</Text> {od.odtype}</Text>
+                        {od.rejectedby?(
+                                                    <Text style={styles.detailText}><Text style={styles.boldText}>Rejected By:</Text> {od.rejectedby}</Text>
+
+                        ):null
+                        }
+                        {od.reasonofrejection?(
+                                                    <Text style={styles.detailText}><Text style={styles.boldText}>Reason of Rejection:</Text> {od.reasonofrejection}</Text>
+
+                        ):null
+                        }
+
                     </View>
 
                     {/* Display PDF link if available */}

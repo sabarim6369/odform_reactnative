@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     marginBottom: hp('2.5%'), // Bottom margin
   },
   closeButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#007bffc4',
     paddingVertical: hp('1.5%'), // Close button height
     paddingHorizontal: wp('6%'), // Close button width
     borderRadius: wp('2%'),
