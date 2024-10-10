@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Modal, Alert } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';
-import {API_BASE_URL} from "@env";
-import api from '../../api'
-const Dashboard = ({ navigation,route }) => {
-  const{user,oddays,odtaken}=route.params;
-  console.log("😎😎😎😎😎",user.year);
-  console.log("🐦‍🔥🐦‍🔥🐦‍🔥🐦‍🔥🐦‍🔥",odtaken)
-  console.log("helllllllllllllllllllllllllllllllo",user)
+import { API_BASE_URL } from "@env";
+import api from '../../api';
+
+const Dashboard = ({ navigation, route }) => {
+  const { user, oddays, odtaken } = route.params;
   const name = user?.username || "Guest";
-const email = user?.email || "guest@example.com";
-const year = user?.year || 5;
-const classs = user?.classs || "SE";
-const section = user?.section || "C";
-const internallimit = oddays?.internallimit;
-const externallimit = oddays?.externallimit;
-const internal = odtaken?.total_internal_od_taken;
-const external = odtaken?.total_external_od_taken;
-const od = user?.od || "Internal";
-const rollno = user?.rollno || "Unknown";
-const[userdetails,setuserdetails]=useState(null);
-const [odDetails, setOdDetails] = useState({ internal: 0, external: 0 });
+  const email = user?.email || "guest@example.com";
+  const year = user?.year || 5;
+  const classs = user?.classs || "SE";
+  const section = user?.section || "C";
+  const internallimit = oddays?.internallimit;
+  const externallimit = oddays?.externallimit;
+  const internal = odtaken?.total_internal_od_taken;
+  const external = odtaken?.total_external_od_taken;
+  const od = user?.od || "Internal";
+  const rollno = user?.rollno || "Unknown";
+  const [userdetails, setuserdetails] = useState(null);
   const [internalBalance, setInternalBalance] = useState(0);
   const [externalBalance, setExternalBalance] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -36,29 +33,59 @@ const [odDetails, setOdDetails] = useState({ internal: 0, external: 0 });
     setInternalBalance(internalLimit - internalTaken);
     setExternalBalance(externalLimit - externalTaken);
   }, [internal, external, internallimit, externallimit]);
-  const previousod=async()=>{
-    let category="inProgressAdvisor"
-    const response=await axios.post(`${api}/fetchResultsByCategory`,{category:category,email:email});
-    console.log(response.data.results);
-    navigation.navigate("Previousod",{results:response.data.results,email:email})
-  }
-const handleGetonduty=async()=>{
-  const response=await axios.post(`${api}/odinput`,{email});
-  console.log(response.data) 
 
-  const { details, odtaken } = response.data;
+  const previousod = async (category) => {
+    if(category==="internalOD"){
+      const response = await axios.post(`${api}/fetchResultsByCategoryods`, { category, email });
+      console.log(response.data.results);
+      navigation.navigate("Previousodinternal", { results: response.data.results, email });
+    }
+    else{
+      const response = await axios.post(`${api}/fetchResultsByCategoryods`, { category, email });
+      console.log(response.data.results);
+      navigation.navigate("Previousodexternal", { results: response.data.results, email });
+    }
+    
+  };
 
-  setuserdetails(details);
- console.log("🐦‍🔥🐦‍🔥🐦‍🔥🐦‍🔥🐦‍🔥🐦‍🔥🐦‍🔥",response.data.details)
-  navigation.navigate("odform",{userdetails:response.data.details,
-    internallimit:internallimit,
-    externallimit:externallimit,
-    internaltaken:response.data.odtaken.total_internal_od_taken,
-    externaltaken:response.data.odtaken.total_external_od_taken,
-  useremail:email});
+  const handlePreviousOdSelection = () => {
+    Alert.alert(
+      "Select OD Type",
+      "Choose the type of On-Duty to view:",
+      [
+        {
+          text: "Internal OD",
+          onPress: () => previousod("internalOD"), // Update this with the appropriate category
+        },
+        {
+          text: "External OD",
+          onPress: () => previousod("externalOD"), // Update this with the appropriate category
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
-  console.log("helloooo😍😍")
-}
+  const handleGetonduty = async () => {
+    const response = await axios.post(`${api}/odinput`, { email });
+    console.log(response.data);
+
+    const { details } = response.data;
+    setuserdetails(details);
+    navigation.navigate("odform", {
+      userdetails: response.data.details,
+      internallimit: internallimit,
+      externallimit: externallimit,
+      internaltaken: response.data.odtaken.total_internal_od_taken,
+      externaltaken: response.data.odtaken.total_external_od_taken,
+      useremail: email,
+    });
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -132,14 +159,13 @@ const handleGetonduty=async()=>{
         <TouchableOpacity style={styles.button} onPress={handleGetonduty}>
           <Text style={styles.buttonText}>Get On-Duty Letter</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={previousod}>
+        <TouchableOpacity style={styles.button} onPress={handlePreviousOdSelection}>
           <Text style={styles.buttonText}>View Previous ODs</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -259,5 +285,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
 export default Dashboard;

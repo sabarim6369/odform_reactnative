@@ -45,7 +45,8 @@ const ODRequests = ({ navigation, route }) => {
     const fetchResultsByCategory = async (category) => {
         console.log("Fetching results for category:", category);
         try {
-            const response = await axios.post(`${api}/fetchResultsByCategory`, { category, email });
+            let odtype='external';
+            const response = await axios.post(`${api}/fetchResultsByCategory`, { category, email,odtype });
             console.log("Fetched results:", response.data.results);
             setResult(response.data.results);
         } catch (error) {
@@ -73,7 +74,7 @@ const ODRequests = ({ navigation, route }) => {
             type = "acceptedodadvisor";
         } else if (category === "inProgresscoe") {
             type = "acceptedodhodexternal";
-        } else if (category === "inProgressJioTag") {
+        } else if (category === "inProgressJioTagexternal") {
             type = "acceptedodcoe";
         } else if (category === "accepted") {
             // Handle accepted category
@@ -166,7 +167,7 @@ const renderImageWithLocation = async (uri, latitude, longitude) => {
         { key: 'inProgressAdvisor', label: 'In-progress (Advisor)' },
         { key: 'inProgressHOD', label: 'In-progress (HOD)' },
         { key: 'inProgresscoe', label: 'In-progress (COE)' },
-        { key: 'inProgressJioTag', label: 'In-progress (JioTag)' },
+        { key: 'inProgressJioTagexternal', label: 'In-progress (JioTag)' },
         { key: 'accepted', label: 'Accepted' },
         { key: 'rejected', label: 'Rejected' }
     ];
@@ -229,7 +230,7 @@ const renderImageWithLocation = async (uri, latitude, longitude) => {
                                     <Text style={styles.buttonText}>View Details</Text>
                                 </TouchableOpacity>
 
-                                {selectedCategory === "inProgressJioTag" && (
+                                {selectedCategory === "inProgressJioTagexternal" && (
                                     <TouchableOpacity 
                                         style={[styles.button, styles.uploadJioTagButton]} 
                                         onPress={() => handleUploadJioTag(item.id)}

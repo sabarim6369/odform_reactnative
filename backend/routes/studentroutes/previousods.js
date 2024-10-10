@@ -6,33 +6,39 @@ const hodconnection = require("../../mysql/databases/hoddatabase/connections/hos
 const coeconnection = require("../../mysql/databases/coedatabase/connections/hostconnection");
 
 previousodroute.post("/fetchResultsByCategory", (req, res) => {
-    const { category, email } = req.body;
+    const { category, email,odtype} = req.body;
     let connection = studentconnection;
     let query = '';
 
     
     switch (category) {
         case "inProgressAdvisor":
-            query = "SELECT * FROM studentoddetails WHERE email=?";
+            query = `SELECT * FROM studentoddetails WHERE email=? and odtype=?`;
             connection=studentconnection;
             break;
         case "inProgressHOD":
-            query = "SELECT * FROM acceptedod WHERE email=?";
+            query = `SELECT * FROM acceptedod WHERE email=? and odtype=?`;
             connection = teacherconnection;
             break;
         case "inProgresscoe":
-            query = "SELECT * FROM acceptedodhodexternal WHERE email=?";
+            query = `SELECT * FROM acceptedodhodexternal WHERE email=?` ;
             connection = hodconnection;
             break;
-        case "inProgressJioTag":
+        case "inProgressJioTagexternal":
             query = "SELECT * FROM acceptedodcoe WHERE email=?";
             connection = coeconnection;
             break;
+            
+        case "inProgressJioTaginternal":
+            query = "SELECT * FROM acceptedodcoe WHERE email=?";
+            connection = coeconnection;
+            break;
+
         case "accepted":
-            query = "SELECT * FROM accepted WHERE email=?";
+            query = `SELECT * FROM accepted WHERE email=? and odtype=?`;
             break;
         case "rejected":
-            query = "SELECT * FROM rejectedod WHERE email=?";
+            query = `SELECT * FROM rejectedod WHERE email=? and odtype=?`;
             connection=teacherconnection
             break;
         default:
@@ -40,7 +46,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
     }
 
     // Execute the query
-    connection.query(query, [email], (err, result) => {
+    connection.query(query, [email,odtype], (err, result) => {
         if (err) {
             console.log("Error occurred:", err);
             return res.status(400).send({ message: "Error occurred" });

@@ -9,7 +9,8 @@ import studentSignup from '../student/Signup';
 import Odform from '../student/Odform';
 import hodLogin from '../hod/Login';
 import hodSignup from '../hod/Signup';
-import ODInformation from '../student/Previousod';
+import ODInformationexternal from '../student/Previousodexternal';
+import ODinformationinternal from '../student/previousodinternal'
 import Teacherhome from '../teacher/Teacherhome'
 import registeredodadvisor from '../teacher/registeredod';
 import advisorviewdetails from '../teacher/viewdetails';
@@ -36,7 +37,8 @@ function Main() {
       <Stack.Screen name="studentSignup" component={studentSignup}options={{ headerShown: false }}   />
       <Stack.Screen name="Studenthome" component={Dashboard}options={{ headerShown: false }}/>
       <Stack.Screen name="odform" component={Odform}options={{ headerShown: false }}/>
-      <Stack.Screen name="Previousod" component={ODInformation}options={{ headerShown: false }}/>
+      <Stack.Screen name="Previousodexternal" component={ODInformationexternal}options={{ headerShown: false }}/>
+      <Stack.Screen name="Previousodinternal" component={ODinformationinternal}options={{ headerShown: false }}/>
 
 
 
