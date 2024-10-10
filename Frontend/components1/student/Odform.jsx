@@ -103,7 +103,7 @@ console.log("internalawailed",internalawailed)
       console.error("Error uploading image:", error);
       throw error; // propagate error
     }
-  };
+  };  
 
   const uploadPdf = async (pdfUri) => {
     try {

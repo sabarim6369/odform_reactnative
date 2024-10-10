@@ -1,17 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import api from '../../api';
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { storage } from '../../config';
+import * as FileSystem from 'expo-file-system';
+import * as IntentLauncher from 'expo-intent-launcher';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import Canvas from 'react-native-canvas';
 
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('inProgressAdvisor'); 
-
+    const [locationPermission, setLocationPermission] = useState(null);
+    const [currentLocation, setCurrentLocation] = useState(null);
+    const canvasRef = useRef(null);
     const { method, email } = route.params;
 
     useEffect(() => {
+        const requestLocationPermission = async () => {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert('Permission Denied', 'Location permission is required to use this feature.');
+            } else {
+                setLocationPermission(true);
+                const location = await Location.getCurrentPositionAsync({});
+                setCurrentLocation(location.coords);
+            }
+        };
+
+        requestLocationPermission();
+
         if (route.params && route.params.results) {
             setResult(route.params.results);
         } else {
@@ -34,33 +57,29 @@ const ODRequests = ({ navigation, route }) => {
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
         fetchResultsByCategory(category);
+        console.log("Selected category:", category);  
     };
 
     const filteredResults = result.filter(item => 
         item.username.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    const handleViewDetails = async (id, odtype,category) => {
+    const handleViewDetails = async (id, odtype, category) => {
         let type = '';
 
         if (category === "inProgressAdvisor") {
-            type ="registeredodadvisor";
+            type = "registeredodadvisor";
         } else if (category === "inProgressHOD") {
             type = "acceptedodadvisor";
-        } 
-        else if(category==="inProgresscoe"){
-            type="acceptedodhodexternal"
-        }
-        else if(category==="inProgressJioTag"){
-            type="acceptedodcoe";
-        }
-        else if(category==="accepted"){
-            
-        }
-        else if(category==="rejected"){
-
-        }
-        else {
+        } else if (category === "inProgresscoe") {
+            type = "acceptedodhodexternal";
+        } else if (category === "inProgressJioTag") {
+            type = "acceptedodcoe";
+        } else if (category === "accepted") {
+            // Handle accepted category
+        } else if (category === "rejected") {
+            // Handle rejected category
+        } else {
             type = "acceptedodadvisor";
         }
 
@@ -74,6 +93,75 @@ const ODRequests = ({ navigation, route }) => {
         }
     };
 
+    const handleUploadJioTag = async (id) => {
+        const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
+        const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
+    
+        if (cameraStatus === 'granted' && locationStatus === 'granted') {
+            const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+    
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                const { uri } = result.assets[0]; // Accessing the first asset's URI
+                console.log("Image URI:", uri);
+
+                const photoData = {
+                    id,
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude,
+                    photoUri: uri,
+                };
+                console.log("😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😍😍😍😍😍😍",photoData)
+                renderImageWithLocation(uri, photoData.latitude, photoData.longitude);
+            }
+        } else {
+            Alert.alert('Permission denied', 'Camera and location permissions are required.');
+        }
+    };
+    const loadImage = (uri) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // Set cross-origin if needed
+            img.src = uri;
+    
+            img.onload = () => resolve(img);
+            img.onerror = () => reject(new Error(`Failed to load image at ${uri}`));
+        });
+    };
+const renderImageWithLocation = async (uri, latitude, longitude) => {
+    console.log("🎉🎉🎉🎉🎉🎉🎉🎉", uri);
+    
+    const path = 'geotag_photos';
+        const uploadedImageUrl = await uploadImage(uri, path);
+        console.log('Uploaded image URL:', uploadedImageUrl);
+
+        await axios.post(`${api}/saveImageUrl`, { imageUrl: uploadedImageUrl });
+    }
+
+    const uploadImage = async (imageurl, path) => {
+        try {
+          const response = await fetch(imageurl);
+          if (!response.ok) throw new Error('Network response was not ok');
+          const blobfile = await response.blob();
+          const reference = ref(storage, `${path}/${Date.now()}`); 
+          const result = await uploadBytes(reference, blobfile);
+          const image = await getDownloadURL(result.ref);
+          return image;
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          throw error; 
+        }
+      };
+    const uploadJioTagPhoto = async(photoData) => {
+        console.log('Uploading photo with location:', photoData);
+        // Upload the photo with the geotag data
+        // Implement your upload logic here
+    };    
+
     const categories = [
         { key: 'inProgressAdvisor', label: 'In-progress (Advisor)' },
         { key: 'inProgressHOD', label: 'In-progress (HOD)' },
@@ -82,7 +170,7 @@ const ODRequests = ({ navigation, route }) => {
         { key: 'accepted', label: 'Accepted' },
         { key: 'rejected', label: 'Rejected' }
     ];
-    
+
     return (
         <View style={styles.container}>
             <View style={styles.topRight}>
@@ -121,45 +209,44 @@ const ODRequests = ({ navigation, route }) => {
             </View>
 
             <ScrollView>
-              <View style={styles.cardContainer}>
-  {filteredResults.length > 0 ? filteredResults.map((item) => (
-    <View key={item.id} style={styles.card}>
-      <Text style={styles.cardTitle}>{item.username}</Text>
-      <Text style={styles.cardText}>Roll No: {item.rollno}</Text>
-      <Text style={styles.cardText}>Reason: {item.reason}</Text>
-      <Text style={styles.cardText}>Total Days: {item.total_days}</Text>
-      
-      <View style={styles.odTypeBox}>
-        <Text style={styles.odTypeText}>{item.odtype || "Not Specified"}</Text>
-      </View>
-      
-      <View style={styles.actionButtons}>
-        <TouchableOpacity 
-          style={[styles.button, styles.viewButton]} 
-          onPress={() => handleViewDetails(item.id, item.odtype, selectedCategory)}
-        >
-          <Text style={styles.buttonText}>View Details</Text>
-        </TouchableOpacity>
+                <View style={styles.cardContainer}>
+                    {filteredResults.length > 0 ? filteredResults.map((item) => (
+                        <View key={item.id} style={styles.card}>
+                            <Text style={styles.cardTitle}>{item.username}</Text>
+                            <Text style={styles.cardText}>Roll No: {item.rollno}</Text>
+                            <Text style={styles.cardText}>Reason: {item.reason}</Text>
+                            <Text style={styles.cardText}>Total Days: {item.total_days}</Text>
+                            
+                            <View style={styles.odTypeBox}>
+                                <Text style={styles.odTypeText}>{item.odtype || "Not Specified"}</Text>
+                            </View>
+                            
+                            <View style={styles.actionButtons}>
+                                <TouchableOpacity 
+                                    style={[styles.button, styles.viewButton]} 
+                                    onPress={() => handleViewDetails(item.id, item.odtype, selectedCategory)}
+                                >
+                                    <Text style={styles.buttonText}>View Details</Text>
+                                </TouchableOpacity>
 
-        {/* Conditionally render the "Upload JioTag" button if selectedCategory is "inProgressJioTag" */}
-        {selectedCategory === "inProgressJioTag" && (
-          <TouchableOpacity 
-            style={[styles.button, styles.uploadJioTagButton]} 
-            onPress={() => handleUploadJioTag(item.id)}
-          >
-            <Text style={styles.buttonText}>Upload JioTag</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  )) : (
-    <View style={styles.noDataContainer}>
-      <Text style={styles.noDataText}>No OD Requests available</Text>
-    </View>
-  )}
-</View>
-
+                                {selectedCategory === "inProgressJioTag" && (
+                                    <TouchableOpacity 
+                                        style={[styles.button, styles.uploadJioTagButton]} 
+                                        onPress={() => handleUploadJioTag(item.id)}
+                                    >
+                                        <Text style={styles.buttonText}>Upload JioTag</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
+                    )) : (
+                        <View style={styles.noDataContainer}>
+                            <Text style={styles.noDataText}>No OD Requests available</Text>
+                        </View>
+                    )}
+                </View>
             </ScrollView>
+            <Canvas ref={canvasRef} style={styles.canvas} />
         </View>
     );
 };
@@ -268,14 +355,23 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         elevation: 2,
     },
+    uploadJioTagButton: {
+        backgroundColor: '#28A745', // Green background for the JioTag button
+        padding: 10,
+        borderRadius: 5,
+        elevation: 2,
+        marginLeft: 10,
+    },
     noDataContainer: {
+        justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 20,
+        marginTop: 50,
     },
     noDataText: {
         fontSize: 18,
         color: '#888',
     },
 });
+
 
 export default ODRequests;
