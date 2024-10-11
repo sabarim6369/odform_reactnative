@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import {API_BASE_URL} from "@env";
-import api from '../../api'
+import api from '../../../api'
 const Signup = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

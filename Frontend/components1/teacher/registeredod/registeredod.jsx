@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import InputModal from './modalreject'; 
 import {API_BASE_URL} from "@env";
-import api from '../../api'
+import api from '../../../api'
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);
     const { classs, section, year, name, email } = route.params;

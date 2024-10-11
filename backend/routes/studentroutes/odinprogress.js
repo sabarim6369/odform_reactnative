@@ -11,9 +11,13 @@ odinprogress.post("/fetchResultsByCategoryods",(req,res)=>{
         query=`SELECT * FROM studentoddetails WHERE email=? and odtype="internal"`;
         odtype='internal'
     }
-    else{
+    else if(category==="external"){
         query=`SELECT * FROM studentoddetails WHERE email=? and odtype="external"`;
         odtype='external'
+    }
+    else{
+        console.log("😪😪😪😪😪😪")
+        query=`select * from studentoddetails where email=?`;
     }
     studentconnection.query(query, [email], (err, result) => {
         if (err) {

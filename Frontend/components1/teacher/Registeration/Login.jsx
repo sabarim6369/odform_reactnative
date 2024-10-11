@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal'; 
 import axios from 'axios';
 import {API_BASE_URL} from "@env";
-import api from '../../api'
+import api from '../../../api'
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

@@ -53,7 +53,15 @@ const handlebuttons=async(item)=>{
         console.error("Error fetching rejected OD history:", error);
     }
 } else {
+  try{
+  const response=await axios.post(`${api}/studentlist`,{classs,section,year});
+  console.log("😤😤😤😤😤😤😤😤😎😎😍😍🎉❤️‍🔥👏😪",response.data.result);
+  navigation.navigate('studentlist',{results:response.data.result});
     console.log(item);
+  }catch(error){
+    console.error("Error fetching accepted OD history:", error);
+
+  }
 }
 
 }

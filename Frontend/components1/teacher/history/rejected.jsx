@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import InputModal from '../modalreject'; 
+import InputModal from '../registeredod/modalreject'; 
 import {API_BASE_URL} from "@env";
 import api from '../../../api'
 const ODRequests = ({ navigation, route}) => {
