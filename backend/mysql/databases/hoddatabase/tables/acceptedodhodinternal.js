@@ -19,7 +19,8 @@ create table if not exists acceptedodhodinternal(
     presentyear int ,
     odtype varchar(100),
     year int,
-    tid int
+    tid int,
+    isActive BOOLEAN DEFAULT TRUE
 )
 `
 

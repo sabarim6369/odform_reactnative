@@ -18,7 +18,8 @@ create table if not exists acceptedodcoe(
     photo longtext,
     presentyear int ,
     odtype varchar(100),
-    year int
+    year int,
+    isActive BOOLEAN DEFAULT TRUE
 )
 `
 

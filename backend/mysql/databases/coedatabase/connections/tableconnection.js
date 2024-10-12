@@ -11,3 +11,4 @@ coeconnection.getConnection((err) => {
  require("../tables/acceptedodcoe")
  require("../tables/rejectedodcoe")
 require("../tables/subfinal")
+require("../tables/geotag")

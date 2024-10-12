@@ -6,7 +6,7 @@ const studentconnection = require("../../../mysql/databases/studentdatabase/conn
 const teacherconnection = require("../../../mysql/databases/teacherdatabase/connections/hostconnection");
 const hodconnection = require("../../../mysql/databases/hoddatabase/connections/hostconnection");
 const coeconnection = require("../../../mysql/databases/coedatabase/connections/hostconnection");
-cron.schedule('*/5 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
     console.log("hello bhai")
     console.log("Checking for ODs past their enddate...");
     const currentDate = new Date();

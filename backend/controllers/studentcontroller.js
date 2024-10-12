@@ -8,6 +8,7 @@ const odformrouter1=require("../routes/studentroutes/odformreturnroute");
 const previousodrouter=require("../routes/studentroutes/previousods");
 const odinprogress=require("../routes/studentroutes/odinprogress")
 const datecontroller=require("../routes/studentroutes/date")
+const lastdayupload=require("../routes/studentroutes/lastdayupload")
 //cron schedule
 const pastods=require("../routes/studentroutes/cron/pastods")
 studentcontroller.use("/",loginrouter);
@@ -18,5 +19,6 @@ studentcontroller.use("/",odformrouter1);
 studentcontroller.use("/",previousodrouter);
 studentcontroller.use("/",odinprogress);
 studentcontroller.use("/",datecontroller);
+studentcontroller.use("/",lastdayupload);
 
 module.exports=studentcontroller;

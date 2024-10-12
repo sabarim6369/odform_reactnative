@@ -11,3 +11,4 @@ hodconnection.getConnection((err) => {
   require("../tables/acceptedodhodinternal")
   require("../tables/acceptedodhodexternal")
   require("../tables/rejectedodhod")
+require("../tables/geotag")

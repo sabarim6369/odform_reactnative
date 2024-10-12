@@ -133,8 +133,8 @@ console.log("internalawailed",internalawailed)
       }
 
       console.log(result.assets[0].uri);
-      const uploadedPdfUrl = await uploadPdf(result.assets[0].uri); // Call the upload function
-      setPdf(uploadedPdfUrl); // Store the uploaded PDF URL
+      const uploadedPdfUrl = await uploadPdf(result.assets[0].uri);
+      setPdf(uploadedPdfUrl);
     } catch (error) {
       console.error("Error picking a PDF:", error);
     }

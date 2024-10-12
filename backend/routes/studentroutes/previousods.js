@@ -25,7 +25,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
                 connection = hodconnection;
                 break;
             case "inProgressJioTagexternal":
-                query = "SELECT * FROM acceptedodcoe WHERE email=?";
+                query = "SELECT * FROM acceptedodcoe WHERE email=? and isActive=TRUE";
                 connection = coeconnection;
                 break;
                 
@@ -36,6 +36,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
     
             case "accepted":
                 query = `SELECT * FROM accepted WHERE email=? and odtype=?`;
+                connection=studentconnection
                 break;
             case "rejected":
                 query = `SELECT * FROM rejectedod WHERE email=? and odtype=?`;
@@ -71,6 +72,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
     
             case "accepted":
                 query = `SELECT * FROM accepted WHERE email=?`;
+                connection=studentconnection
                 break;
             case "rejected":
                 query = `SELECT * FROM rejectedod WHERE email=?`;
