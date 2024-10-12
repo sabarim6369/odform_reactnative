@@ -34,7 +34,8 @@ advisorreject.post("/advisorreject", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         } = results[0]; 
 
         const insertQuery = `
@@ -94,9 +95,15 @@ advisorreject.post("/advisorreject", (req, res) => {
                     console.log("Error deleting rejected OD:", delErr);
                     return res.status(500).json({ message: "Error deleting rejected OD" });
                 }
-               
+               const query2="delete from oddays where email=? and appliedtime=?";
+               studentconnection.query(query2,[studentEmail,appliedtime],(delerr,delres)=>{
+                if(err){
+                    console.log("error occured",err);
+                }
+           
                 return res.status(201).json({ message: "OD rejected successfully" });
             });
+        })
         });
     });
 });

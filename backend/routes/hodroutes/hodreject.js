@@ -34,7 +34,8 @@ hodreject.post("/hodreject", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         } = results[0]; 
 
         const insertQuery = `
@@ -141,10 +142,16 @@ hodreject.post("/hodreject", (req, res) => {
                     console.log("Error deleting rejected OD:", delErr);
                     return res.status(500).json({ message: "Error deleting rejected OD" });
                 }
-               
+               const query2="delete from oddays where email=? and appliedtime=?";
+               studentconnection.query(query2,[studentEmail,appliedtime],(delerr,delres)=>{
+                if(delerr){
+                    console.log("error occured",delerr)
+                }
+            
                 return res.status(201).json({ message: "OD rejected successfully"});
             });
         });
+    })
     });
 });
 });

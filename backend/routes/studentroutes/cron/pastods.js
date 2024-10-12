@@ -7,6 +7,22 @@ const teacherconnection = require("../../../mysql/databases/teacherdatabase/conn
 const hodconnection = require("../../../mysql/databases/hoddatabase/connections/hostconnection");
 const coeconnection = require("../../../mysql/databases/coedatabase/connections/hostconnection");
 cron.schedule('* * * * *', async () => {
+//     const query=`
+// SELECT 
+//     a.*, 
+//     DATE_FORMAT(a.applieddate, '%Y-%m-%d %H:%i:%s') AS applieddate_formatted, 
+//     DATE_FORMAT(a.startdate, '%Y-%m-%d %H:%i:%s') AS startdate_formatted, 
+//     DATE_FORMAT(a.enddate, '%Y-%m-%d %H:%i:%s') AS enddate_formatted
+// FROM acceptedodhodinternal a;
+
+
+// `;
+//     hodconnection.query(query,(err,res)=>{
+//         if(err){
+//             console.log(err);
+//         }
+//         console.log(res);
+//     })
     console.log("hello bhai")
     console.log("Checking for ODs past their enddate...");
     const currentDate = new Date();
@@ -52,6 +68,12 @@ cron.schedule('* * * * *', async () => {
                     if(deleteerr){
                         console.log("error occured")
                     }
+                    const query2="delete from oddays where email=? and appliedtime=?";
+                    studentconnection.query(query2,[od.email,od.appliedtime],(delerr,delres)=>{
+                     if(delerr){
+                         console.log("error occured",delerr)
+                     }
+                })
                 })
             })
     
@@ -101,7 +123,13 @@ cron.schedule('* * * * *', async () => {
                     if(deleteerr){
                         console.log("error occured")
                     }
+                    const query2="delete from oddays where email=? and appliedtime=?";
+                    studentconnection.query(query2,[od.email,od.appliedtime],(delerr,delres)=>{
+                     if(delerr){
+                         console.log("error occured",delerr)
+                     }
                 })
+            })
             })
     
         })

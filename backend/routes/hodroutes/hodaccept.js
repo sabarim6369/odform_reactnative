@@ -39,7 +39,8 @@ hodaccept.post("/hodaccept", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         } = results[0]; 
 
         const studentEmail = email;
@@ -63,8 +64,9 @@ hodaccept.post("/hodaccept", (req, res) => {
             presentyear, 
             odtype, 
             year,
-            tid
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+            tid,
+            appliedtime
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
         `;
         hodconnection.query(insertQuery, [
             email,
@@ -83,7 +85,8 @@ hodaccept.post("/hodaccept", (req, res) => {
             presentyear,
             odtype,
             year,
-            id
+            id,
+            appliedtime
         ], (insertErr, insertResults) => {
             if (insertErr) {
                 console.log("Error inserting accepted OD:", insertErr);

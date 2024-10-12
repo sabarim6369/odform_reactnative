@@ -11,7 +11,7 @@ odinprogress.post("/fetchResultsByCategoryods",(req,res)=>{
         query=`SELECT * FROM studentoddetails WHERE email=? and odtype="internal"`;
         odtype='internal'
     }
-    else if(category==="external"){
+    else if(category==="externalOD"){
         query=`SELECT * FROM studentoddetails WHERE email=? and odtype="external"`;
         odtype='external'
     }

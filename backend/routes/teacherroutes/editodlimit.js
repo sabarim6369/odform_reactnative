@@ -15,7 +15,7 @@ editodlimit.post("/editodlimit",(req,res)=>{
   GROUP BY odtypes.odtype;
 
 `;
-const query2=`select internallimit,externallimit from oddays where email="ds@1" limit 1`
+const query2=`select internallimit,externallimit from oddays where email=? limit 1`
     studentconnection.query(query,[email],(err,results)=>{
         if(err){
             console.log("error occured");

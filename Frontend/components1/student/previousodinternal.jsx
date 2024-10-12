@@ -75,11 +75,11 @@ const ODRequests = ({ navigation, route }) => {
         } else if (category === "inProgresscoe") {
             type = "acceptedodhodexternal";
         } else if (category === "inProgressJioTaginternal") {
-            type = "acceptedodcoe";
+            type = "acceptedodhodinternal";
         } else if (category === "accepted") {
             // Handle accepted category
         } else if (category === "rejected") {
-            // Handle rejected category
+           type="rejectedodadvisor"
         } else {
             type = "acceptedodadvisor";
         }
@@ -97,7 +97,7 @@ const ODRequests = ({ navigation, route }) => {
     const handleUploadJioTag = async (id, type, email, startdate1, enddate1) => {
         const startDate = new Date(startdate1);
         const endDate = new Date(enddate1);
-    
+    console.log(startdate1);
         const today = new Date();
         const todayDateString = today.toISOString().split('T')[0]; 
         const startDateString = startDate.toISOString().split('T')[0];

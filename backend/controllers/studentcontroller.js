@@ -11,10 +11,12 @@ const datecontroller=require("../routes/studentroutes/date")
 const lastdayupload=require("../routes/studentroutes/lastdayupload")
 //cron schedule
 const pastods=require("../routes/studentroutes/cron/pastods")
+const dailycheck=require("../routes/studentroutes/cron/dailycheckforgeotag")
+// const teachermail=require("../routes/studentroutes/cron/teachersmail")
 studentcontroller.use("/",loginrouter);
 studentcontroller.use("/",signuprouter);
-studentcontroller.use("/",odinputrouter)
-studentcontroller.use("/",odformrouter)
+studentcontroller.use("/",odinputrouter);
+studentcontroller.use("/",odformrouter);
 studentcontroller.use("/",odformrouter1);
 studentcontroller.use("/",previousodrouter);
 studentcontroller.use("/",odinprogress);

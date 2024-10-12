@@ -181,7 +181,8 @@ advisoraccept.post("/advisoraccept", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         } = results[0]; 
 
         const studentEmail = email;
@@ -254,8 +255,9 @@ advisoraccept.post("/advisoraccept", (req, res) => {
             photo, 
             presentyear, 
             odtype, 
-            year
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            year,
+            appliedtime
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
         `;
         teacherconnection.query(insertQuery, [
             email,
@@ -273,7 +275,8 @@ advisoraccept.post("/advisoraccept", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         ], (insertErr, insertResults) => {
             if (insertErr) {
                 console.log("Error inserting accepted OD:", insertErr);

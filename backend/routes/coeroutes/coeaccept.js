@@ -40,7 +40,8 @@ coeaccept.post("/coeaccept", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         } = results[0]; 
 
         const studentEmail = email;
@@ -61,8 +62,9 @@ coeaccept.post("/coeaccept", (req, res) => {
             photo, 
             presentyear, 
             odtype, 
-            year
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            year,
+            appliedtime
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
         `;
         coeconnection.query(insertQuery, [
             email,
@@ -80,7 +82,8 @@ coeaccept.post("/coeaccept", (req, res) => {
             photo,
             presentyear,
             odtype,
-            year
+            year,
+            appliedtime
         ], (insertErr, insertResults) => {
             if (insertErr) {
                 console.log("Error inserting accepted OD:", insertErr);

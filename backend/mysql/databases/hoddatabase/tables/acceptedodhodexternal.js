@@ -9,9 +9,9 @@ create table if not exists acceptedodhodexternal(
     classs VARCHAR(50) NOT NULL,
     section VARCHAR(50) NOT NULL,
     reason VARCHAR(255) NOT NULL,
-    applieddate DATE NOT NULL,
-    startdate DATE NOT NULL,
-    enddate DATE NOT NULL,
+    applieddate DATETIME NOT NULL,
+    startdate DATETIME NOT NULL,
+    enddate DATETIME NOT NULL,
     total_days INT NOT NULL,
     relatedto VARCHAR(255),
     pdf longtext,
@@ -19,7 +19,8 @@ create table if not exists acceptedodhodexternal(
     presentyear int ,
     odtype varchar(100),
     year int,
-    tid int
+    tid int,
+     appliedtime DATETIME
 )
 `
 

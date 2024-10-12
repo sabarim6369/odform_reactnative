@@ -36,7 +36,8 @@ coereject.post("/coereject", (req, res) => {
             presentyear,
             odtype,
             year,
-            tid
+            tid,
+            appliedtime
         } = results[0]; 
         const insertQuery = `
         INSERT INTO rejectedodcoe (
@@ -100,8 +101,14 @@ coereject.post("/coereject", (req, res) => {
                     if(err){
                         console.log("error",teacherdel);
                     }
+                    const query2="delete from oddays where email=? and appliedtime=?";
+                    studentconnection.query(query2,[studentEmail,appliedtime],(delerr,delres)=>{
+                     if(err){
+                         console.log("error occured",err);
+                     }
                 return res.status(201).json({ message: "OD rejected successfully" });
             });
+        })
         })
         });
     });

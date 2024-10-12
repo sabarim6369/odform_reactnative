@@ -9,7 +9,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
     const { category, email,odtype} = req.body;
     let connection = studentconnection;
     let query = '';
-
+console.log(category,email,odtype)
     if(odtype==='internal'|| odtype==='external'){
         switch (category) {
             case "inProgressAdvisor":
@@ -30,8 +30,8 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
                 break;
                 
             case "inProgressJioTaginternal":
-                query = "SELECT * FROM acceptedodcoe WHERE email=?";
-                connection = coeconnection;
+                query = `SELECT * FROM acceptedodhodinternal WHERE email=? AND isActive=TRUE`;
+                connection = hodconnection;
                 break;
     
             case "accepted":
@@ -43,7 +43,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
                 connection=teacherconnection
                 break;
             default:
-                return res.status(400).send({ message: "Invalid category provided" }); // Return if no valid category
+                return res.status(400).send({ message: "Invalid category provided" }); 
         }
     }
        else{
@@ -66,8 +66,8 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
                 break;
                 
             case "inProgressJioTaginternal":
-                query = "SELECT * FROM acceptedodcoe WHERE email=?";
-                connection = coeconnection;
+                query = "SELECT * FROM acceptedodhodinternal WHERE email=?";
+                connection = hodconnection;
                 break;
     
             case "accepted":
@@ -91,6 +91,7 @@ previousodroute.post("/fetchResultsByCategory", (req, res) => {
             console.log("Error occurred:", err);
             return res.status(400).send({ message: "Error occurred" });
         }
+        console.log(result)
         res.status(200).json({ results: result });
     });
 });

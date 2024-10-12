@@ -5,7 +5,7 @@ id int primary key auto_increment,
 odid int,
 photo_url longtext,  
 email varchar(100),          
-upload_date DATE,
+upload_date DATETIME,
 FOREIGN KEY (odid) REFERENCES acceptedodhodinternal(id)
 )
 `

@@ -5,7 +5,7 @@ odformrouter.post("/odform",(req,res)=>{
   const{email,rollno,name,classhandling,section,year,odType,reason,appliedDate1,formattedStartDate,formattedEndDate,totalDays,photo,pdf,internallimits,externallimits}=req.body;
   
   console.log(email,rollno,name,classhandling,section,year,odType,reason,appliedDate1,formattedStartDate,formattedEndDate,totalDays,photo,pdf)
-  const query=`insert into studentoddetails(email,rollno,username,classs,section,reason,applieddate,startdate,enddate,total_days,pdf,photo,presentyear,odtype) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  const query=`insert into studentoddetails(email,rollno,username,classs,section,reason,applieddate,startdate,enddate,total_days,pdf,photo,presentyear,odtype,appliedtime) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())`;
 studentconnection.query(query,[email,rollno,name,classhandling,section,reason,appliedDate1,formattedStartDate,formattedEndDate,totalDays,pdf,photo,year,odType],(err,results)=>{
   if(err){
     console.log("errror occcured",err);
