@@ -79,7 +79,7 @@ const ODRequests = ({ navigation, route }) => {
         } else if (category === "accepted") {
             // Handle accepted category
         } else if (category === "rejected") {
-            // Handle rejected category
+           type="rejectedodadvisor"
         } else {
             type = "acceptedodadvisor";
         }
@@ -94,7 +94,15 @@ const ODRequests = ({ navigation, route }) => {
         }
     };
 
-    const handleUploadJioTag = async (id) => {
+    const handleUploadJioTag = async (id,type) => {
+        const response=await axios.post(`${api}/date`,{id,type});
+        const startdate=response.data.startdate;
+        const enddate=response.data.enddate;
+        console.log(startdate,enddate)
+        const today = new Date();
+        if(today>=startdate&&today<=enddate){
+
+        
         const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
         const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
     
@@ -122,6 +130,10 @@ const ODRequests = ({ navigation, route }) => {
         } else {
             Alert.alert('Permission denied', 'Camera and location permissions are required.');
         }
+    }
+    else{
+        Alert.alert("Not allowed","you can post only during the odperiod")
+    }
     };
     const loadImage = (uri) => {
         return new Promise((resolve, reject) => {
@@ -175,12 +187,12 @@ const renderImageWithLocation = async (uri, latitude, longitude) => {
     return (
         <View style={styles.container}>
             <View style={styles.topRight}>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.button}
                     onPress={() => navigation.navigate('TeacherHome')}
                 >
                     <Text style={styles.buttonText}>Back to Home</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
 
             <Text style={styles.title}>OD Requests</Text>
@@ -233,7 +245,7 @@ const renderImageWithLocation = async (uri, latitude, longitude) => {
                                 {selectedCategory === "inProgressJioTagexternal" && (
                                     <TouchableOpacity 
                                         style={[styles.button, styles.uploadJioTagButton]} 
-                                        onPress={() => handleUploadJioTag(item.id)}
+                                        onPress={() => handleUploadJioTag(item.id,item.odtype)}
                                     >
                                         <Text style={styles.buttonText}>Upload JioTag</Text>
                                     </TouchableOpacity>
