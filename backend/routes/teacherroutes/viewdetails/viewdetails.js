@@ -53,6 +53,10 @@ viewdetails.post("/viewdetails",(req,res)=>{
          query=`select * from rejectedodcoe where id=?`;
         connection=coeconnection;
     }
+    else if(type==="accepted"){
+        query=`select * from accepted where id=?`;
+        connection=studentconnection;
+    }
     console.log("❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥",id)
 
     connection.query(query, [id], (err, results) => {

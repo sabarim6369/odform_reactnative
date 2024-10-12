@@ -70,14 +70,14 @@ const ODRequests = ({ navigation, route }) => {
 
         if (category === "inProgressAdvisor") {
             type = "registeredodadvisor";
-        } else if (category === "inProgressHOD") {
+        } else if (category === "inProgressHOD"){
             type = "acceptedodadvisor";
         } else if (category === "inProgresscoe") {
             type = "acceptedodhodexternal";
         } else if (category === "inProgressJioTagexternal") {
             type = "acceptedodcoe";
         } else if (category === "accepted") {
-            // Handle accepted category
+            type="accepted"
         } else if (category === "rejected") {
            type="rejectedodadvisor"
         } else {

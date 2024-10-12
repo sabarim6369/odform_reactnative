@@ -77,7 +77,7 @@ const ODRequests = ({ navigation, route }) => {
         } else if (category === "inProgressJioTaginternal") {
             type = "acceptedodhodinternal";
         } else if (category === "accepted") {
-            // Handle accepted category
+             type="accepted"
         } else if (category === "rejected") {
            type="rejectedodadvisor"
         } else {
