@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Modal, TextInput, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 function Home({ navigation }) {
   const [selectedOption, setSelectedOption] = useState('');
-    const logoScale = useState(new Animated.Value(1))[0]; 
+  const [passkeyModalVisible, setPasskeyModalVisible] = useState(false);
+  const [passkey, setPasskey] = useState('');
+  const logoScale = useState(new Animated.Value(1))[0];
   const fadeAnim = useState(new Animated.Value(0))[0];
 
   const handleNavigation = (value) => {
-    if (value) {
+    if (value === 'adminLogin') {
+      setPasskeyModalVisible(true); // Show passkey modal for admin login
+    } else if (value) {
       setSelectedOption(value);
       navigation.navigate(value);
+    }
+  };
+
+  const handlePasskeySubmit = () => {
+    const correctPasskey = "odform@1"; // Replace with your actual passkey
+    if (passkey === correctPasskey) {
+      setPasskeyModalVisible(false);
+      setSelectedOption('adminPanel'); // Replace with your actual admin panel route
+      navigation.navigate('adminhome'); // Navigate to the admin panel
+      setPasskey(''); 
+    } else {
+      alert('Incorrect passkey!'); // Alert for incorrect passkey
+      setPasskey(''); // Clear the input field
+      
     }
   };
 
@@ -28,7 +46,6 @@ function Home({ navigation }) {
       }),
     ]).start();
 
-
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
@@ -41,8 +58,8 @@ function Home({ navigation }) {
       {/* Logo Section */}
       <View style={styles.logoContainer}>
         <Animated.Image
-          source={require('../assets/logo/eshwar logo.jpg')} // Ensure to replace this with the correct image path
-          style={[styles.logo, { transform: [{ scale: logoScale }] }]} // Apply scale transformation
+          source={require('../assets/logo/eshwar logo.jpg')}
+          style={[styles.logo, { transform: [{ scale: logoScale }] }]}
         />
       </View>
 
@@ -64,8 +81,39 @@ function Home({ navigation }) {
           <Picker.Item label="Student Login" value="studentLogin" />
           <Picker.Item label="HOD Login" value="hodLogin" />
           <Picker.Item label="COE Login" value="coeLogin" />
+          <Picker.Item label="Admin Login" value="adminLogin" />
         </Picker>
       </View>
+
+      {/* Passkey Modal */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={passkeyModalVisible}
+        onRequestClose={() => {setPasskeyModalVisible(false);
+          setPasskey(''); 
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Enter Passkey</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter passkey"
+              value={passkey}
+              onChangeText={setPasskey}
+              secureTextEntry
+              autoFocus
+            />
+            <TouchableOpacity style={styles.button} onPress={handlePasskeySubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => {setPasskeyModalVisible(false);setPasskey('');}}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Footer Section */}
       <View style={styles.footer}>
@@ -148,6 +196,59 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#3498db',
     textDecorationLine: 'underline',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker overlay
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: '#2c3e50',
+    fontWeight: 'bold',
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderColor: '#3498db',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    backgroundColor: '#f7f8fa',
+  },
+  button: {
+    backgroundColor: '#3498db',
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  cancelButton: {
+    backgroundColor: '#e74c3c',
+  },
+  cancelButtonText: {
+    color: '#fff',
   },
 });
 

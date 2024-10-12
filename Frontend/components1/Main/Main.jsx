@@ -25,6 +25,7 @@ import coesignup from '../COE/signup';
 import registeredodcoe from '../COE/registeredod';
 import studentlist from '../teacher/studentList/studentlist';
 import studentdetails from '../teacher/studentList/studentdetails'
+import adminhome from '../admin/home';
 const Stack = createStackNavigator();
 
 function Main() {
@@ -72,7 +73,8 @@ function Main() {
      <Stack.Screen name="coesignup" component={coesignup}options={{ headerShown: false }}/>
      <Stack.Screen name="registeredodcoe" component={registeredodcoe}options={{ headerShown: false }}/>
 
-
+ {/* admin routes */}
+ <Stack.Screen name="adminhome" component={adminhome}options={{ headerShown: false }}/>
 
     </Stack.Navigator>
 
