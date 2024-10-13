@@ -70,14 +70,14 @@ const ODRequests = ({ navigation, route }) => {
 
         if (category === "inProgressAdvisor") {
             type = "registeredodadvisor";
-        } else if (category === "inProgressHOD") {
+        } else if (category === "inProgressHOD"){
             type = "acceptedodadvisor";
         } else if (category === "inProgresscoe") {
             type = "acceptedodhodexternal";
         } else if (category === "inProgressJioTagexternal") {
             type = "acceptedodcoe";
         } else if (category === "accepted") {
-            // Handle accepted category
+            type="accepted"
         } else if (category === "rejected") {
            type="rejectedodadvisor"
         } else {
@@ -94,65 +94,67 @@ const ODRequests = ({ navigation, route }) => {
         }
     };
 
-    const handleUploadJioTag = async (id,type) => {
-        const response=await axios.post(`${api}/date`,{id,type});
-        const startdate=response.data.startdate;
-        const enddate=response.data.enddate;
-        console.log(startdate,enddate)
+    const handleUploadJioTag = async (id, type, email, startdate1, enddate1) => {
+       // const response = await axios.post(`${api}/date`, { id, type });
+        const startDate = new Date(startdate1);
+        const endDate = new Date(enddate1);
+    
         const today = new Date();
-        if(today>=startdate&&today<=enddate){
-
-        
-        const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
-        const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
+        const todayDateString = today.toISOString().split('T')[0]; 
+        const startDateString = startDate.toISOString().split('T')[0];
+        const endDateString = endDate.toISOString().split('T')[0];
     
-        if (cameraStatus === 'granted' && locationStatus === 'granted') {
-            const result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
+        console.log("Start Date:", startDateString);
+        console.log("End Date:", endDateString);
+        console.log("Today's Date:", todayDateString);
+        if (todayDateString >= startDateString && todayDateString <= endDateString) {
+            const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
+            const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
     
-            if (!result.canceled && result.assets && result.assets.length > 0) {
-                const { uri } = result.assets[0]; // Accessing the first asset's URI
-                console.log("Image URI:", uri);
-
-                const photoData = {
-                    id,
-                    latitude: currentLocation.latitude,
-                    longitude: currentLocation.longitude,
-                    photoUri: uri,
-                };
-                console.log("😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😍😍😍😍😍😍",photoData)
-                renderImageWithLocation(uri, photoData.latitude, photoData.longitude);
+            if (cameraStatus === 'granted' && locationStatus === 'granted') {
+                const result = await ImagePicker.launchCameraAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 1,
+                });
+    
+                if (!result.canceled && result.assets && result.assets.length > 0) {
+                    const { uri } = result.assets[0]; // Accessing the first asset's URI
+                    console.log("Image URI:", uri);
+    
+                    const photoData = {
+                        id,
+                        latitude: currentLocation.latitude,
+                        longitude: currentLocation.longitude,
+                        photoUri: uri,
+                    };
+                    console.log("Photo Data:", photoData);
+                    renderImageWithLocation(uri, photoData.latitude, photoData.longitude, id, email,todayDateString,startDateString,endDateString);
+                }
+            } else {
+                Alert.alert('Permission denied', 'Camera and location permissions are required.');
             }
         } else {
-            Alert.alert('Permission denied', 'Camera and location permissions are required.');
+            Alert.alert("Not allowed", "You can post only during the OD period.");
         }
-    }
-    else{
-        Alert.alert("Not allowed","you can post only during the odperiod")
-    }
     };
-    const loadImage = (uri) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = 'anonymous'; // Set cross-origin if needed
-            img.src = uri;
     
-            img.onload = () => resolve(img);
-            img.onerror = () => reject(new Error(`Failed to load image at ${uri}`));
-        });
-    };
-const renderImageWithLocation = async (uri, latitude, longitude) => {
+const renderImageWithLocation = async (uri, latitude, longitude,id,email,todayDateString,startDateString,endDateString) => {
     console.log("🎉🎉🎉🎉🎉🎉🎉🎉", uri);
     
     const path = 'geotag_photos';
         const uploadedImageUrl = await uploadImage(uri, path);
         console.log('Uploaded image URL:', uploadedImageUrl);
 
-        await axios.post(`${api}/saveImageUrl`, { imageUrl: uploadedImageUrl });
+        const response=await axios.post(`${api}/saveImageUrl`, { imageUrl: uploadedImageUrl,id:id,email:email});
+        Alert.alert("Success","photo uploaded successfully");
+        if(todayDateString===endDateString){
+            console.log("😍😍😍😍😍😍😍😍😍😍")
+            type="external";
+            const response=await axios.post(`${api}/lastdayupload`,{id:id,email:email,type:type});
+            Alert.alert("Success","Your od has been finally accepted");
+        }
     }
 
     const uploadImage = async (imageurl, path) => {
@@ -245,7 +247,7 @@ const renderImageWithLocation = async (uri, latitude, longitude) => {
                                 {selectedCategory === "inProgressJioTagexternal" && (
                                     <TouchableOpacity 
                                         style={[styles.button, styles.uploadJioTagButton]} 
-                                        onPress={() => handleUploadJioTag(item.id,item.odtype)}
+                                        onPress={() => handleUploadJioTag(item.id,item.odtype,item.email,item.startdate,item.enddate)}
                                     >
                                         <Text style={styles.buttonText}>Upload JioTag</Text>
                                     </TouchableOpacity>
