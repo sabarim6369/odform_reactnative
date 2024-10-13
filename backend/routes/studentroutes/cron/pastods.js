@@ -30,7 +30,7 @@ cron.schedule('* * * * *', async () => {
     const selectquery1=`select * from acceptedodcoe where enddate<?`;
     hodconnection.query(selectquery,[currentDate],(selecterror,selectresult)=>{
         if(selecterror){
-            console.log("error occured");
+            console.log("error occured",selecterror);
         }
         selectresult.forEach((od)=>{
             const insertQuery = `
@@ -61,12 +61,12 @@ cron.schedule('* * * * *', async () => {
                 od.total_days,od.relatedto,od.pdf,od.photo,od.presentyear,od.odtype,od.year,reason,rejectedBy
             ],(inserterror,insertresult)=>{
                 if(inserterror){
-                    console.log("error occured");
+                    console.log("error occured",inserterror);
                 }
                 const deletequery="delete from acceptedodhodinternal where id=?";
                 hodconnection.query(deletequery,[od.id],(deleteerr,deleteresult)=>{
                     if(deleteerr){
-                        console.log("error occured")
+                        console.log("error occured",deleteerr)
                     }
                     const query2="delete from oddays where email=? and appliedtime=?";
                     studentconnection.query(query2,[od.email,od.appliedtime],(delerr,delres)=>{
@@ -85,7 +85,7 @@ cron.schedule('* * * * *', async () => {
 
     coeconnection.query(selectquery1,[currentDate],(selecterror,selectresult)=>{
         if(selecterror){
-            console.log("error occured");
+            console.log("error occured",selecterror);
         }
         selectresult.forEach((od)=>{
             const insertQuery = `
@@ -116,12 +116,12 @@ cron.schedule('* * * * *', async () => {
                 od.total_days,od.relatedto,od.pdf,od.photo,od.presentyear,od.odtype,od.year,reason,rejectedBy
             ],(inserterror,insertresult)=>{
                 if(inserterror){
-                    console.log("error occured");
+                    console.log("error occured",inserterror);
                 }
-                const deletequery="delete from acceptedodcoe where id=?";
+                const deletequery="update acceptedodcoe set isActive=FALSE where id=?";
                 coeconnection.query(deletequery,[od.id],(deleteerr,deleteresult)=>{
                     if(deleteerr){
-                        console.log("error occured")
+                        console.log("error occured",deleteerr)
                     }
                     const query2="delete from oddays where email=? and appliedtime=?";
                     studentconnection.query(query2,[od.email,od.appliedtime],(delerr,delres)=>{

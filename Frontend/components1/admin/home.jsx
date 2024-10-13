@@ -1,19 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Ensure you have @expo/vector-icons installed
+import { MaterialIcons } from '@expo/vector-icons';
 
 function AdminHome({ navigation }) {
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Admin Panel</Text>
-        <TouchableOpacity onPress={() => {navigation.goBack()}}>
+        <TouchableOpacity style={styles.logoutButtonContainer} onPress={() => navigation.goBack()}>
           <Text style={styles.logoutButton}>Logout</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Navigation Menu */}
       <View style={styles.navMenu}>
         {menuItems.map((item, index) => (
           <TouchableOpacity 
@@ -21,7 +19,7 @@ function AdminHome({ navigation }) {
             style={styles.menuButton} 
             onPress={() => navigation.navigate(item.screen)}
           >
-            <MaterialIcons name={item.icon} size={20} color="white" />
+            <MaterialIcons name={item.icon} size={24} color="white" style={styles.iconStyle} />
             <Text style={styles.menuButtonText}>{item.title}</Text>
           </TouchableOpacity>
         ))}
@@ -30,61 +28,76 @@ function AdminHome({ navigation }) {
   );
 }
 
-// Sample data for menu items
 const menuItems = [
+  { title: 'Add Student', screen: 'studentSignup', icon: 'person-add-alt' },
+  { title: 'Remove Student', screen: 'RemoveStudent', icon: 'person-remove-alt' },
   { title: 'Add Teacher', screen: 'teacherSignup', icon: 'person-add' },
   { title: 'Remove Teacher', screen: 'RemoveTeacher', icon: 'person-remove' },
-  { title: 'Add HOD', screen: 'AddHOD', icon: 'group-add' },
+  { title: 'Add HOD', screen: 'hodSignup', icon: 'group-add' },
   { title: 'Remove HOD', screen: 'RemoveHOD', icon: 'group-remove' },
-  { title: 'Add COE', screen: 'AddCOE', icon: 'business-center' },
+  { title: 'Add COE', screen: 'coesignup', icon: 'business-center' },
   { title: 'Remove COE', screen: 'RemoveCOE', icon: 'business-off' },
-  { title: 'Add Student', screen: 'AddStudent', icon: 'person-add-alt' },
-  { title: 'Remove Student', screen: 'RemoveStudent', icon: 'person-remove-alt' },
 ];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#f7f8fa',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
+    width: '100%',
+    backgroundColor: '#007BFF',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    position: 'absolute',
+    top: 0,
+    zIndex: 10,
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15, // Increased padding for better header appearance
-    backgroundColor: '#007BFF', // Changed to a blue color
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 25, // Increased margin for spacing
-    elevation: 4, // Added elevation for shadow effect
   },
   headerText: {
-    fontSize: 26, // Increased font size for better visibility
+    fontSize: 26,
     fontWeight: 'bold',
     color: 'white',
+  },
+  logoutButtonContainer: {
+    padding: 10,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 5,
   },
   logoutButton: {
     fontSize: 16,
     color: 'white',
   },
   navMenu: {
-    marginVertical: 20,
+    width: '90%',
+    marginTop: 80,
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    paddingTop: 20, // Added padding to bring buttons down
+    alignItems: 'center',
   },
   menuButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'blue', // Keep button color as blue
-    padding: 10,
-    borderRadius: 8,
-    marginVertical: 5,
+    backgroundColor: '#007BFF',
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
     width: '100%',
+    justifyContent: 'flex-start',
+  },
+  iconStyle: {
+    marginRight: 20,
   },
   menuButtonText: {
-    marginLeft: 10,
     color: 'white',
     fontSize: 16,
   },

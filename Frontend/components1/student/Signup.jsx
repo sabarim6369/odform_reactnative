@@ -48,16 +48,19 @@ const Signup = ({ navigation }) => {
         });
         
         if (response.status === 200) {
-          setAlertMessage(response.data.message);
-          setTimeout(() => {
-            setAlertMessage(''); 
-            navigation.navigate('studentLogin');
-          }, 3000);
+          Alert.alert(
+            'Success',
+            'Signup successful!',
+            [
+              { text: 'OK', onPress: () => navigation.goBack() },
+            ],
+            { cancelable: false }
+          );
         } else {
-          setAlertMessage(response.data.message);
-          setTimeout(() => {
-            setAlertMessage('');
-          }, 3000);
+          Alert.alert('Error', response.data.message);
+
+        
+        
         }
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'An error occurred';
