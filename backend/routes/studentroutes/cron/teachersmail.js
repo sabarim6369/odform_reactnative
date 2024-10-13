@@ -8,8 +8,8 @@
 //         host:"smtp.gmail.com",
 //         port:587,
 //         auth:{
-//             user:"sabarim6369@gmail.com",
-//             pass:"wvug zxnn vnil yxwl"
+//             user:"sabari.m2023cse@sece.ac.in",
+//             pass:"sabari.m6369"
 //         }
 //     }
 // )
@@ -21,6 +21,6 @@
 //     })
 //     console.log("mail sent successfully")
 // }
-// sendmail("sabari.m2023cse@sece.ac.in","hiiiiiiiiiiiiiiiiiiiii","simple work")
+// sendmail("sabarim6369@gmail.com","hiiiiiiiiiiiiiiiiiiiii","simple work")
 
 // });

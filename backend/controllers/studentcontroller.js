@@ -9,10 +9,11 @@ const previousodrouter=require("../routes/studentroutes/previousods");
 const odinprogress=require("../routes/studentroutes/odinprogress")
 const datecontroller=require("../routes/studentroutes/date")
 const lastdayupload=require("../routes/studentroutes/lastdayupload")
+const fetchmessage=require("../routes/studentroutes/fetchmessage")
 //cron schedule
 const pastods=require("../routes/studentroutes/cron/pastods")
 const dailycheck=require("../routes/studentroutes/cron/dailycheckforgeotag")
-// const teachermail=require("../routes/studentroutes/cron/teachersmail")
+const teachermail=require("../routes/studentroutes/cron/teachersmail")
 studentcontroller.use("/",loginrouter);
 studentcontroller.use("/",signuprouter);
 studentcontroller.use("/",odinputrouter);
@@ -22,5 +23,6 @@ studentcontroller.use("/",previousodrouter);
 studentcontroller.use("/",odinprogress);
 studentcontroller.use("/",datecontroller);
 studentcontroller.use("/",lastdayupload);
+studentcontroller.use("/",fetchmessage);
 
 module.exports=studentcontroller;

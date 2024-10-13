@@ -23,7 +23,7 @@ const Login = ({ navigation }) => {
                 Alert.alert('Success', message);
                 
 
-                navigation.navigate('Studenthome', { user: response.data.user,oddays:response.data.oddays,odtaken:response.data.odtaken});
+                navigation.navigate('Studenthome', { user: response.data.user,oddays:response.data.oddays,odtaken:response.data.odtaken,unread:response.data.unread});
             } else {
                 const message = response.data.message || 'Login failed. Please check your credentials.';
                 Alert.alert('Error', message);

@@ -7,7 +7,10 @@ import { API_BASE_URL } from "@env";
 import api from '../../api';
 
 const Dashboard = ({ navigation, route }) => {
-  const { user, oddays, odtaken } = route.params;
+  const unreadMessages = 3;
+  const { user, oddays, odtaken} = route.params;
+  let unread=route.params.unread;
+  console.log(route.params.unread,"😍😍😍😍😍");
   const name = user?.username || "Guest";
   const email = user?.email || "guest@example.com";
   const year = user?.year || 5;
@@ -23,7 +26,9 @@ const Dashboard = ({ navigation, route }) => {
   const [internalBalance, setInternalBalance] = useState(0);
   const [externalBalance, setExternalBalance] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [messageModalVisible, setMessageModalVisible] = useState(false); // For messages modal
+  const [messages, setMessages] = useState([]); // For storing messages
+  const [selectedMessage, setSelectedMessage] = useState(null);  
   useEffect(() => {
     const internalTaken = parseInt(internal, 10);
     const externalTaken = parseInt(external, 10);
@@ -35,17 +40,15 @@ const Dashboard = ({ navigation, route }) => {
   }, [internal, external, internallimit, externallimit]);
 
   const previousod = async (category) => {
-    if(category==="internalOD"){
+    if (category === "internalOD") {
       const response = await axios.post(`${api}/fetchResultsByCategoryods`, { category, email });
       console.log(response.data.results);
       navigation.navigate("Previousodinternal", { results: response.data.results, email });
-    }
-    else{
+    } else {
       const response = await axios.post(`${api}/fetchResultsByCategoryods`, { category, email });
       console.log(response.data.results);
       navigation.navigate("Previousodexternal", { results: response.data.results, email });
     }
-    
   };
 
   const handlePreviousOdSelection = () => {
@@ -55,11 +58,11 @@ const Dashboard = ({ navigation, route }) => {
       [
         {
           text: "Internal OD",
-          onPress: () => previousod("internalOD"), // Update this with the appropriate category
+          onPress: () => previousod("internalOD"),
         },
         {
           text: "External OD",
-          onPress: () => previousod("externalOD"), // Update this with the appropriate category
+          onPress: () => previousod("externalOD"),
         },
         {
           text: "Cancel",
@@ -85,15 +88,52 @@ const Dashboard = ({ navigation, route }) => {
       useremail: email,
     });
   };
-
+  const fetchMessages = async () => {
+    try {
+      const response = await axios.post(`${api}/fetchMessages`, { email: email });
+      
+      // Map through the messages and format the created_at date
+      const formattedMessages = response.data.messages.map((message) => {
+        const formattedDate = new Date(message.created_at).toLocaleDateString() + ' ' + new Date(message.created_at).toLocaleTimeString();
+        
+        return {
+          ...message,
+          formattedDate,  // Add formatted date to the message object
+        };
+      });
+  
+      setMessages(formattedMessages); // Set the messages with formatted date
+    } catch (error) {
+      console.error("Error fetching messages: ", error);
+    }
+  };
+  
+  const onIconPress = () => {
+    fetchMessages();
+    setMessageModalVisible(true);
+  };
+  
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>ON-Duty Hub</Text>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <MaterialIcons name="more-vert" size={28} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.headerIconsContainer}>
+          {/* Three Dots */}
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.threeDotButton}>
+            <MaterialIcons name="more-vert" size={28} color="#fff" />
+          </TouchableOpacity>
+
+          {/* Message Icon */}
+          <TouchableOpacity onPress={onIconPress} style={styles.messageIconContainer}>
+            <MaterialIcons name="message" size={30} color="#000506" />
+            {unread > 0 && (
+              <View style={styles.badgeContainer}>
+                <Text style={styles.badgeText}>{unread}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Modal for Options */}
@@ -118,6 +158,36 @@ const Dashboard = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
+
+
+{/* Modal for Messages */}
+<Modal visible={messageModalVisible} transparent={true} animationType="slide">
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalHeader}>Messages</Text>
+      {/* ScrollView wraps the message list */}
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {messages.length === 0 ? (
+          <Text>No new messages</Text>
+        ) : (
+          messages.map((message, index) => (
+            <View key={index} style={styles.messageItem}>
+              <Text>
+                {message.content} - Sent on: {message.formattedDate}
+              </Text>
+              <Text style={styles.messageText}>{message.message}</Text>
+            </View>
+          ))
+        )}
+      </ScrollView>
+      {/* Close button */}
+      <TouchableOpacity style={styles.modalButton} onPress={() => setMessageModalVisible(false)}>
+        <Text style={styles.modalButtonText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
 
       {/* User Info Section */}
       <View style={styles.userInfoContainer}>
@@ -166,6 +236,7 @@ const Dashboard = ({ navigation, route }) => {
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -192,23 +263,22 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#fff',
-    padding: wp('5%'), 
+    padding: wp('5%'),
     borderRadius: wp('2.5%'),
     alignItems: 'center',
     width: '80%',
   },
   modalButton: {
-    paddingVertical: hp('2%'), // Responsive paddingVertical
-    marginVertical: hp('1%'), // Responsive marginVertical
+    paddingVertical: hp('2%'),
+    marginVertical: hp('1%'),
     width: '100%',
     alignItems: 'center',
     backgroundColor: '#007BFF',
-    borderRadius: wp('2%'), // Responsive border radius
+    borderRadius: wp('2.5%'),
   },
   modalButtonText: {
     color: '#fff',
-    fontSize: wp('4.5%'), // Responsive font size
-    fontWeight: 'bold',
+    fontSize: wp('4.5%'),
   },
   userInfoContainer: {
     padding: wp('5%'), // Responsive padding
@@ -284,5 +354,74 @@ const styles = StyleSheet.create({
     fontSize: wp('4.5%'), // Responsive font size
     fontWeight: 'bold',
   },
+  headerIconsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  threeDotButton: {
+    marginRight: wp('3%'),
+  },
+  messageIconContainer: {
+    position: 'relative', // Allow absolute positioning of the badge
+  },
+  badgeContainer: {
+    position: 'absolute',
+    right: -10,
+    top: -5, // Adjust this value to position the badge above the icon
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent background
+  },
+  modalContent: {
+    width: '90%',
+    height: '80%', // Set a max height for the modal
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    elevation: 5,
+  },
+  modalHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  scrollViewContent: {
+    flexGrow: 1, // Allows ScrollView to expand
+  },
+  messageItem: {
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 5,
+    elevation: 2,
+  },
+  messageText: {
+    fontSize: 16,
+  },
+  modalButton: {
+    marginTop: 20,
+    backgroundColor: '#2196F3',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+
 export default Dashboard;

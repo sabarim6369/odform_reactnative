@@ -49,15 +49,26 @@ loginroute.post("/login", (req, res) => {
             if(err){
                 console.log("error");
             }
-         
+            const totalday="select count(*) as unread from studentmessages where email=? and isread=false";
+            studentconnection.query(totalday,[email],(tdayerr,tdayres)=>{
+                if(tdayerr){
+                    console.log("error occured",tdayerr);
+                }
+                console.log("😐😐😐😐😐😐😐😐😐😐😐")
+                console.log(tdayres[0].unread);
+                console.log("😐😐😐😐😐😐😐😐😐😐😐")
+               const unread=tdayres[0].unread;
+          
                    const odtaken=totaldays[0];
                     const oddays = oddaysResults[0];
                     console.log("****************************************😍😍😍😍😍",oddays)
                     console.log("🎉🎉🎉🎉🎉",userDetails)
                     console.log("internaltaken🙌🙌🙌🙌🙌🙌🙌🙌",odtaken.total_internal_od_taken)
                     console.log("internaltaken🙌🙌🙌🙌🙌🙌🙌🙌",odtaken.total_external_od_taken)
-                    return res.status(200).json({ message: "Login successful", user: userDetails, oddays: oddays,odtaken:odtaken});
+                    console.log("unread",unread)
+                    return res.status(200).json({ message: "Login successful", user: userDetails, oddays: oddays,odtaken:odtaken,unread:unread});
                 });
+            })
             })
             } else {
                 return res.status(401).json({ message: "Invalid password" });

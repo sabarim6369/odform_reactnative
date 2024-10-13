@@ -136,6 +136,67 @@ hodreject.post("/hodreject", (req, res) => {
                     console.log("Error inserting rejected OD:", insertErr);
                     return res.status(500).json({ message: "Error inserting rejected OD" });
                 }
+
+
+
+                const message=`hello ${username},your ${odtype} od which you applied at ${appliedtime} for ${total_days} days is rejected by your HOD.Reason:${reasonofrejection}`;
+             
+
+         
+                const insertQuery1 = `
+                INSERT INTO studentmessages (
+                    email, 
+                    rollno, 
+                    username, 
+                    classs, 
+                    section, 
+                    reason, 
+                    applieddate, 
+                    startdate, 
+                    enddate, 
+                    total_days, 
+                    relatedto, 
+                    pdf, 
+                    photo, 
+                    presentyear, 
+                    odtype, 
+                    year,
+                    appliedtime,
+                    message,
+                    created_at,
+                    reasonofrejection,
+                    rejectedby
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,now(),?,?);
+                `;
+               studentconnection.query(insertQuery1,[
+                studentEmail,
+                rollno,
+                username,
+                classs,
+                section,
+                reason,
+                applieddate,
+                startdate,
+                enddate,
+                total_days,
+                relatedto,
+                pdf,
+                photo,
+                presentyear,
+                odtype,
+                year,
+                appliedtime,
+                message,
+                reasonofrejection,
+                rejectedBy
+               ],(error,resultss)=>{
+                if(error){
+                    console.log("error occured",error);
+                }
+    
+    
+    
+    
             const deleteQuery = `DELETE FROM acceptedod WHERE id=?`;
             teacherconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
                 if (delErr) {
@@ -151,6 +212,7 @@ hodreject.post("/hodreject", (req, res) => {
                 return res.status(201).json({ message: "OD rejected successfully"});
             });
         });
+    })
     })
     });
 });

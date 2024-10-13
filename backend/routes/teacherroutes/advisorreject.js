@@ -89,6 +89,71 @@ advisorreject.post("/advisorreject", (req, res) => {
                 return res.status(500).json({ message: "Error inserting rejected OD" });
             }
             
+            const message=`hello ${username},your ${odtype} od which you applied at ${appliedtime} for ${total_days} days has rejected by your advisor.Reason:${reasonofrejection}`;
+             
+
+         
+            const insertQuery1 = `
+            INSERT INTO studentmessages (
+                email, 
+                rollno, 
+                username, 
+                classs, 
+                section, 
+                reason, 
+                applieddate, 
+                startdate, 
+                enddate, 
+                total_days, 
+                relatedto, 
+                pdf, 
+                photo, 
+                presentyear, 
+                odtype, 
+                year,
+                appliedtime,
+                message,
+                created_at,
+                reasonofrejection,
+                rejectedby
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,now(),?,?);
+            `;
+           studentconnection.query(insertQuery1,[
+            email,
+            rollno,
+            username,
+            classs,
+            section,
+            reason,
+            applieddate,
+            startdate,
+            enddate,
+            total_days,
+            relatedto,
+            pdf,
+            photo,
+            presentyear,
+            odtype,
+            year,
+            appliedtime,
+            message,
+            reasonofrejection,
+            rejectedBy
+           ],(error,resultss)=>{
+            if(error){
+                console.log("error occured",error);
+            }
+
+
+
+
+
+
+
+
+
+
+
             const deleteQuery = `DELETE FROM studentoddetails WHERE id=?`;
             studentconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
                 if (delErr) {
@@ -107,5 +172,6 @@ advisorreject.post("/advisorreject", (req, res) => {
         });
     });
 });
+})
 
 module.exports = advisorreject;

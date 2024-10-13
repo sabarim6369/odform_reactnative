@@ -282,7 +282,58 @@ advisoraccept.post("/advisoraccept", (req, res) => {
                 console.log("Error inserting accepted OD:", insertErr);
                 return res.status(500).json({ message: "Error inserting accepted OD" });
             }
-            
+            const message=`hello ${username},your ${odtype} od which you applied at ${appliedtime} for ${total_days} days has accepted by your advisor.it is in progress with hod`;
+             
+
+         
+            const insertQuery1 = `
+            INSERT INTO studentmessages (
+                email, 
+                rollno, 
+                username, 
+                classs, 
+                section, 
+                reason, 
+                applieddate, 
+                startdate, 
+                enddate, 
+                total_days, 
+                relatedto, 
+                pdf, 
+                photo, 
+                presentyear, 
+                odtype, 
+                year,
+                appliedtime,
+                message,
+                created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,now());
+            `;
+           studentconnection.query(insertQuery1,[
+            email,
+            rollno,
+            username,
+            classs,
+            section,
+            reason,
+            applieddate,
+            startdate,
+            enddate,
+            total_days,
+            relatedto,
+            pdf,
+            photo,
+            presentyear,
+            odtype,
+            year,
+            appliedtime,
+            message
+           ],(error,resultss)=>{
+            if(error){
+                console.log("error occured",error);
+            }
+          
+
             const deleteQuery = `DELETE FROM studentoddetails WHERE id=?`;
             studentconnection.query(deleteQuery, [id], (delErr, deleteResult) => {
                 if (delErr) {
@@ -303,6 +354,7 @@ advisoraccept.post("/advisoraccept", (req, res) => {
             });
         });
     });
+})
 });
 
 module.exports = advisoraccept;
