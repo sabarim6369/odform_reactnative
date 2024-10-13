@@ -57,6 +57,10 @@ viewdetails.post("/viewdetails",(req,res)=>{
         query=`select * from accepted where id=?`;
         connection=studentconnection;
     }
+    else if(type==="message"){
+        query=`select * from studentmessages where id=?`;
+        connection=studentconnection
+    }
     console.log("❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥",id)
 
     connection.query(query, [id], (err, results) => {

@@ -10,6 +10,7 @@ const odinprogress=require("../routes/studentroutes/odinprogress")
 const datecontroller=require("../routes/studentroutes/date")
 const lastdayupload=require("../routes/studentroutes/lastdayupload")
 const fetchmessage=require("../routes/studentroutes/fetchmessage")
+const readcontroller=require("../routes/studentroutes/readupdate")
 //cron schedule
 const pastods=require("../routes/studentroutes/cron/pastods")
 const dailycheck=require("../routes/studentroutes/cron/dailycheckforgeotag")
@@ -24,5 +25,6 @@ studentcontroller.use("/",odinprogress);
 studentcontroller.use("/",datecontroller);
 studentcontroller.use("/",lastdayupload);
 studentcontroller.use("/",fetchmessage);
+studentcontroller.use("/",readcontroller);
 
 module.exports=studentcontroller;

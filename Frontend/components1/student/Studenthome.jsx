@@ -9,8 +9,8 @@ import api from '../../api';
 const Dashboard = ({ navigation, route }) => {
   const unreadMessages = 3;
   const { user, oddays, odtaken} = route.params;
-  let unread=route.params.unread;
-  console.log(route.params.unread,"😍😍😍😍😍");
+  const [unread, setUnread] = useState(route.params.unread);
+  console.log(unread,"😍😍😍😍😍");
   const name = user?.username || "Guest";
   const email = user?.email || "guest@example.com";
   const year = user?.year || 5;
@@ -38,7 +38,15 @@ const Dashboard = ({ navigation, route }) => {
     setInternalBalance(internalLimit - internalTaken);
     setExternalBalance(externalLimit - externalTaken);
   }, [internal, external, internallimit, externallimit]);
-
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setModalVisible(false);
+      setMessageModalVisible(false);
+    });
+  
+    return unsubscribe;
+  }, [navigation]);
+  
   const previousod = async (category) => {
     if (category === "internalOD") {
       const response = await axios.post(`${api}/fetchResultsByCategoryods`, { category, email });
@@ -107,11 +115,22 @@ const Dashboard = ({ navigation, route }) => {
       console.error("Error fetching messages: ", error);
     }
   };
-  
+  const updateread=async()=>{
+    const response=await axios.post(`${api}/read`,{email});
+  }
   const onIconPress = () => {
+   setUnread(0)
+   updateread();
     fetchMessages();
     setMessageModalVisible(true);
   };
+  const handleViewDetails=async(id)=>{
+    let type="message"
+    const response=await axios.post(`${api}/viewdetails`,{id,type});
+    const od = response.data.user;
+   navigation.navigate('viewdetails', { od });
+
+  }
   
   return (
     <ScrollView style={styles.container}>
@@ -176,6 +195,14 @@ const Dashboard = ({ navigation, route }) => {
                 {message.content} - Sent on: {message.formattedDate}
               </Text>
               <Text style={styles.messageText}>{message.message}</Text>
+              
+              {/* View Details button */}
+              <TouchableOpacity 
+                style={styles.viewDetailsButton} 
+                onPress={() => handleViewDetails(message.id)}
+              >
+                <Text style={styles.viewDetailsButtonText}>View Details</Text>
+              </TouchableOpacity>
             </View>
           ))
         )}
@@ -187,6 +214,7 @@ const Dashboard = ({ navigation, route }) => {
     </View>
   </View>
 </Modal>
+
 
 
       {/* User Info Section */}
@@ -421,6 +449,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  viewDetailsButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  viewDetailsButtonText: {
+    color: 'white',
+    textAlign: 'center',
   },
 });
 
