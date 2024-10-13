@@ -11,7 +11,6 @@ import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Canvas from 'react-native-canvas';
-import ProgressCircle from 'react-native-progress-circle';
 
 const ODRequests = ({ navigation, route }) => {
     const [result, setResult] = useState([]);

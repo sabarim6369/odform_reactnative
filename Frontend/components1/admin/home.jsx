@@ -1,8 +1,50 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Button ,Alert} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import axios from 'axios';
+import api from '../../api';
 function AdminHome({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [userType, setUserType] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleRemove = (type) => {
+    setUserType(type);
+    setModalVisible(true);
+  };
+  const handleSubmit = async () => {
+    console.log(`Removing ${userType} with email: ${email}`);
+    try {
+        const response = await axios.post(`${api}/admin`, { email, userType });
+
+        if (response.status === 200) {
+            Alert.alert("Success", `Successfully removed email from ${userType} database`);
+        } else if (response.status === 404) {
+            Alert.alert("Sorry", `Email does not exist in ${userType} database`);
+        } else {
+            Alert.alert("Failure", "Some error occurred. Please try again.");
+        }
+    } catch (error) {
+        if (error.response) {
+            // Handle the case when the email is not found in the database
+            if (error.response.status === 404) {
+                Alert.alert("Sorry", `Email does not exist in ${userType} database`);
+            } else if (error.response.status === 400) {
+                Alert.alert("Error", `Invalid request. Please check the input.`);
+            } else {
+                Alert.alert("Failure", "Some error occurred. Please try again.");
+            }
+        } else {
+            Alert.alert("Error", "An error occurred while trying to remove the user.");
+        }
+        console.error("Error while removing user:", error);
+    } finally {
+        setEmail(''); 
+        setModalVisible(false); 
+    }
+};
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -14,16 +56,50 @@ function AdminHome({ navigation }) {
 
       <View style={styles.navMenu}>
         {menuItems.map((item, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={styles.menuButton} 
-            onPress={() => navigation.navigate(item.screen)}
+          <TouchableOpacity
+            key={index}
+            style={styles.menuButton}
+            onPress={() => {
+              if (item.title.startsWith('Remove')) {
+                handleRemove(item.title.split(' ')[1]); 
+              } else {
+                navigation.navigate(item.screen);
+              }
+            }}
           >
             <MaterialIcons name={item.icon} size={24} color="white" style={styles.iconStyle} />
             <Text style={styles.menuButtonText}>{item.title}</Text>
           </TouchableOpacity>
         ))}
       </View>
+
+      {/* Modal for Email Input */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => {
+          setModalVisible(false);
+          setEmail('');
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Remove {userType}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <View style={styles.buttonContainer}>
+            <Button title="Cancel" onPress={() => {
+              setModalVisible(false);
+              setEmail(''); // Clear email on cancel
+            }} />
+            <Button title="Submit" onPress={handleSubmit} />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -100,6 +176,32 @@ const styles = StyleSheet.create({
   menuButtonText: {
     color: 'white',
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 20,
+    color: 'white',
+  },
+  input: {
+    height: 40,
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: '80%',
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    backgroundColor: 'white',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
   },
 });
 
