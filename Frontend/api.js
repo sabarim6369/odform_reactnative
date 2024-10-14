@@ -1,2 +1,2 @@
-api="http://192.168.21.14:5000"
+api="http://172.16.127.53:5000"
 export default api;

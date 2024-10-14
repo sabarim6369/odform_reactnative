@@ -97,7 +97,6 @@ const markInactiveAndMoveToRejected = async () => {
     });
 };
 
-// Schedule the cron job to run every day at 11:59 PM
 
 cron.schedule('59 23 * * *', async () => {
     console.log('Running daily task to check geotag submissions...');

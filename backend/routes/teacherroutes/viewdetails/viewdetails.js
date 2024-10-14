@@ -10,7 +10,7 @@ viewdetails.post("/viewdetails",(req,res)=>{
     let connection=studentconnection;
     let query='';
     if(type==="registeredodadvisor"){
-         query = `SELECT * FROM studentoddetails WHERE id=?`;    //test@sece.ac.in //test@123
+         query = `SELECT * FROM studentoddetails WHERE id=?`;
         connection=studentconnection;
     }
     else if(type==="acceptedodadvisor"){
@@ -46,7 +46,25 @@ viewdetails.post("/viewdetails",(req,res)=>{
         connection=hodconnection;
     }
     else if(type==="acceptedodcoe"){
-         query=`select * from acceptedodcoe where id=?`;
+        // const query1="select g.photo_url as photo from acceptedodcoe as a left join geotagexternal as g on a.id=g.odid where a.id=?";
+        //  const query2=`select * from acceptedodcoe where id=?`;
+        // connection=coeconnection;
+        // connection.query(query1,[id],(error1,result1)=>{
+        //     if(error1){
+        //         console.log("error occured",error1);
+        //     }
+        //     connection.query(query2,[id],(error2,result2)=>{
+        //         if(error2){
+        //             console.log("error occured",error2);
+        //         }
+        //         const mergedResult = {
+        //             ...result2[0], 
+        //             photo: result1.length > 0 ? result1[0].photo : null
+        //         };
+        //         return res.status(200).json({user:mergedResult})
+        //     })
+        // })
+        query=`select * from acceptedodcoe where id=?`;
         connection=coeconnection;
     }
     else if(type==="rejectedodcoe"){
