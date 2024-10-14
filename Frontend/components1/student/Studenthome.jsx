@@ -99,18 +99,17 @@ const Dashboard = ({ navigation, route }) => {
   const fetchMessages = async () => {
     try {
       const response = await axios.post(`${api}/fetchMessages`, { email: email });
-      
-      // Map through the messages and format the created_at date
+     
       const formattedMessages = response.data.messages.map((message) => {
         const formattedDate = new Date(message.created_at).toLocaleDateString() + ' ' + new Date(message.created_at).toLocaleTimeString();
         
         return {
           ...message,
-          formattedDate,  // Add formatted date to the message object
+          formattedDate,  
         };
       });
   
-      setMessages(formattedMessages); // Set the messages with formatted date
+      setMessages(formattedMessages); 
     } catch (error) {
       console.error("Error fetching messages: ", error);
     }

@@ -3,7 +3,7 @@ const studentconnection = require("../../mysql/databases/studentdatabase/connect
 const readcontroller=express.Router()
 readcontroller.post("/read",(req,res)=>{
     const{email}=req.body;
-    const query="update studentmessages set isread=true where email=?  and isread = false";
+    const query="update studentmessages set isread=true where BINARY email=?  and isread = false";
     studentconnection.query(query,[email],(err,result)=>{
         if(err){
             console.log("error occurred",err)

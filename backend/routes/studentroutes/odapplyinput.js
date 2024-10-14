@@ -4,7 +4,7 @@ const studentconnection = require("../../mysql/databases/studentdatabase/connect
 
 const odinput = odapplyinputroute.post("/odinput", (req, res) => {
     const { email } = req.body;  
-    const query = `SELECT username, section, classhandling, year, rollno FROM signupdetails WHERE email = ?`;
+    const query = `SELECT username, section, classhandling, year, rollno FROM signupdetails WHERE BINARY email = ?`;
 
     studentconnection.query(query, [email], (err, result) => {
         if (err) {
@@ -23,7 +23,7 @@ const odinput = odapplyinputroute.post("/odinput", (req, res) => {
           SUM(CASE WHEN odtype = 'internal' THEN total_days ELSE 0 END) AS total_internal_od_taken,
           SUM(CASE WHEN odtype = 'external' THEN total_days ELSE 0 END) AS total_external_od_taken
         FROM oddays 
-        WHERE email = ?`;
+        WHERE BINARY email = ?`;
 
         studentconnection.query(query2, [email], (err, results) => {
             if (err) {

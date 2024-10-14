@@ -23,7 +23,7 @@ const Signup = ({ navigation }) => {
         try {
           const response = await axios.post(`${api}/teachersignup`, { name, email, password, selectedYear, selectedClass, selectedSection });
           Alert.alert("Signup Successful", response.data.message, [
-            { text: "OK", onPress: () => navigation.navigate('teacherLogin') }
+            { text: "OK", onPress: () => navigation.goBack() }
           ]);
         } catch (error) {
           const errorMessage = error.response?.data?.message || 'Server error. Please try again.';
@@ -83,14 +83,16 @@ const Signup = ({ navigation }) => {
           style={styles.picker}
           onValueChange={(itemValue) => setSelectedClass(itemValue)}
         >
-          <Picker.Item label="Select Class" value="" />
+           <Picker.Item label="Select Class" value="" />
           <Picker.Item label="CSE" value="CSE" />
           <Picker.Item label="AIDS" value="AIDS" />
           <Picker.Item label="ECE" value="ECE" />
-          <Picker.Item label="EEE" value="EEE" />
-          <Picker.Item label="IT" value="IT" />
-          <Picker.Item label="CSBS" value="CSBS" />
+          <Picker.Item label="AIML" value="AIML" />
           <Picker.Item label="CCE" value="CCE" />
+          <Picker.Item label="CSBS" value="CSBS" />
+          <Picker.Item label="IT" value="IT" />
+          <Picker.Item label="CS" value="CS" />
+          <Picker.Item label="EEE" value="EEE" />
           <Picker.Item label="MECH" value="MECH" />
         </Picker>
       </View>
@@ -106,6 +108,7 @@ const Signup = ({ navigation }) => {
           <Picker.Item label="A" value="A" />
           <Picker.Item label="B" value="B" />
           <Picker.Item label="C" value="C" />
+          <Picker.Item label="D" value="D" />
         </Picker>
       </View>
       <TextInput

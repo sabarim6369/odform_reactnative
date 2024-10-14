@@ -3,7 +3,7 @@ const odformroute1=express.Router();
 const studentconnection = require("../../mysql/databases/studentdatabase/connections/hostconnection");
 odformroute1.post("/odform2",(req,res)=>{
     const{email}=req.body;
-    const query = "SELECT * FROM signupdetails WHERE email = ?";
+    const query = "SELECT * FROM signupdetails WHERE BINARY email = ?";
     
     studentconnection.query(query, [email], (err, results) => {
         if (err) {
@@ -31,7 +31,7 @@ odformroute1.post("/odform2",(req,res)=>{
           SUM(CASE WHEN odtype = 'internal' THEN total_days ELSE 0 END) AS total_internal_od_taken,
           SUM(CASE WHEN odtype = 'external' THEN total_days ELSE 0 END) AS total_external_od_taken
         FROM oddays 
-        WHERE email = ?`;
+        WHERE BINARY email = ?`;
           studentconnection.query(query2,[email],(err,totaldays)=>{
             if(err){
                 console.log("error");

@@ -9,7 +9,7 @@ loginroute.post("/login", (req, res) => {
         return res.status(400).json({ message: "Please provide both email and password." });
     }
     
-    const query = "SELECT * FROM signupdetails WHERE email = ?";
+    const query = "SELECT * FROM signupdetails WHERE BINARY email = ?";
     
     studentconnection.query(query, [email], (err, results) => {
         if (err) {
@@ -44,12 +44,12 @@ loginroute.post("/login", (req, res) => {
           SUM(CASE WHEN odtype = 'internal' THEN total_days ELSE 0 END) AS total_internal_od_taken,
           SUM(CASE WHEN odtype = 'external' THEN total_days ELSE 0 END) AS total_external_od_taken
         FROM oddays 
-        WHERE email = ?`;
+        WHERE BINARY email = ?`;
           studentconnection.query(query2,[email],(err,totaldays)=>{
             if(err){
                 console.log("error");
             }
-            const totalday="select count(*) as unread from studentmessages where email=? and isread=false";
+            const totalday="select count(*) as unread from studentmessages where BINARY email=? and isread=false";
             studentconnection.query(totalday,[email],(tdayerr,tdayres)=>{
                 if(tdayerr){
                     console.log("error occured",tdayerr);

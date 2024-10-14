@@ -23,7 +23,7 @@ const Signup = ({ navigation }) => {
         try {
           const response = await axios.post(`${api}/hodsignup`, { name, email, password, selectedYear, selectedClass});
           Alert.alert("Signup Successful", response.data.message, [
-            { text: "OK", onPress: () => navigation.navigate('hodLogin') }
+            { text: "OK", onPress: () => navigation.goBack() }
           ]);
         } catch (error) {
           const errorMessage = error.response?.data?.message || 'Server error. Please try again.';
@@ -39,9 +39,7 @@ const Signup = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('hodLogin')}>
-        <Text style={styles.loginButtonText}>Go to Login</Text>
-      </TouchableOpacity>
+     
 
       <Text style={styles.title}>Sign Up</Text>
 
@@ -84,13 +82,23 @@ const Signup = ({ navigation }) => {
           onValueChange={(itemValue) => setSelectedClass(itemValue)}
         >
           <Picker.Item label="Select Department" value="" />
-          <Picker.Item label="CSE" value="CSE" />
+          {/* <Picker.Item label="CSE" value="CSE" />
           <Picker.Item label="AIDS" value="AIDS" />
           <Picker.Item label="ECE" value="ECE" />
           <Picker.Item label="EEE" value="EEE" />
           <Picker.Item label="IT" value="IT" />
           <Picker.Item label="CSBS" value="CSBS" />
           <Picker.Item label="CCE" value="CCE" />
+          <Picker.Item label="MECH" value="MECH" /> */}
+          <Picker.Item label="CSE" value="CSE" />
+          <Picker.Item label="AIDS" value="AIDS" />
+          <Picker.Item label="ECE" value="ECE" />
+          <Picker.Item label="AIML" value="AIML" />
+          <Picker.Item label="CCE" value="CCE" />
+          <Picker.Item label="CSBS" value="CSBS" />
+          <Picker.Item label="IT" value="IT" />
+          <Picker.Item label="CS" value="CS" />
+          <Picker.Item label="EEE" value="EEE" />
           <Picker.Item label="MECH" value="MECH" />
         </Picker>
       </View>

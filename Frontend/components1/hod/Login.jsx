@@ -98,12 +98,12 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
       )}
 
-      <View style={styles.signupContainer}>
+      {/* <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Don't have an account?</Text>
         <TouchableOpacity onPress={() => navigation.navigate('hodSignup')}>
           <Text style={styles.signupLink}>Sign Up</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <Modal isVisible={isModalVisible} onBackdropPress={closeModal}>
         <View style={styles.modalContainer}>

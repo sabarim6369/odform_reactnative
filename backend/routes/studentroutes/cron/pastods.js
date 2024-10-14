@@ -7,27 +7,12 @@ const teacherconnection = require("../../../mysql/databases/teacherdatabase/conn
 const hodconnection = require("../../../mysql/databases/hoddatabase/connections/hostconnection");
 const coeconnection = require("../../../mysql/databases/coedatabase/connections/hostconnection");
 cron.schedule('* * * * *', async () => {
-//     const query=`
-// SELECT 
-//     a.*, 
-//     DATE_FORMAT(a.applieddate, '%Y-%m-%d %H:%i:%s') AS applieddate_formatted, 
-//     DATE_FORMAT(a.startdate, '%Y-%m-%d %H:%i:%s') AS startdate_formatted, 
-//     DATE_FORMAT(a.enddate, '%Y-%m-%d %H:%i:%s') AS enddate_formatted
-// FROM acceptedodhodinternal a;
 
-
-// `;
-//     hodconnection.query(query,(err,res)=>{
-//         if(err){
-//             console.log(err);
-//         }
-//         console.log(res);
-//     })
     console.log("hello bhai")
     console.log("Checking for ODs past their enddate...");
     const currentDate = new Date();
-    const selectquery=`select * from acceptedodhodinternal where enddate<?`;
-    const selectquery1=`select * from acceptedodcoe where enddate<?`;
+    const selectquery=`select * from acceptedodhodinternal where enddate<? and isActive=true`;
+    const selectquery1=`select * from acceptedodcoe where enddate<? and isActive=true`;
     hodconnection.query(selectquery,[currentDate],(selecterror,selectresult)=>{
         if(selecterror){
             console.log("error occured",selecterror);
@@ -55,7 +40,7 @@ cron.schedule('* * * * *', async () => {
                 rejectedby
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
-            const reason=`not uploaded geotag`;
+            const reason=`not uploadeddddddddd geotag`;
             const rejectedBy = "System";
             teacherconnection.query(insertQuery,[od.email,od.rollno,od.username,od.classs,od.section,od.reason,od.applieddate,od.startdate,od.enddate,
                 od.total_days,od.relatedto,od.pdf,od.photo,od.presentyear,od.odtype,od.year,reason,rejectedBy
@@ -63,7 +48,7 @@ cron.schedule('* * * * *', async () => {
                 if(inserterror){
                     console.log("error occured",inserterror);
                 }
-                const deletequery="delete from acceptedodhodinternal where id=?";
+                const deletequery="update acceptedodhodinternal set isActive=false where id=?";
                 hodconnection.query(deletequery,[od.id],(deleteerr,deleteresult)=>{
                     if(deleteerr){
                         console.log("error occured",deleteerr)
@@ -111,7 +96,7 @@ cron.schedule('* * * * *', async () => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             const reason=`not uploaded geotag`;
-            const rejectedBy = "System";
+            const rejectedBy = "Systeeem";
             teacherconnection.query(insertQuery,[od.email,od.rollno,od.username,od.classs,od.section,od.reason,od.applieddate,od.startdate,od.enddate,
                 od.total_days,od.relatedto,od.pdf,od.photo,od.presentyear,od.odtype,od.year,reason,rejectedBy
             ],(inserterror,insertresult)=>{

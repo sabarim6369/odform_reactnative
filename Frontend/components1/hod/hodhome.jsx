@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   modalButton: {
     padding: hp('2%'),
     borderRadius: 10,
-    backgroundColor: '#6200ea', 
+    backgroundColor: '#4a90e2', 
     marginBottom: hp('2%'),
     width: '100%',
     alignItems: 'center',
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: hp('2%'),
     borderRadius: 10,
-    backgroundColor: '#f44336', // Red close button
+    backgroundColor: '#8b2922b9', // Red close button
     marginTop: hp('2%'),
     width: '100%',
     alignItems: 'center',

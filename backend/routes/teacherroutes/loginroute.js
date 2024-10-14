@@ -10,7 +10,7 @@ loginroute.post("/teacherlogin", (req, res) => {
         return res.status(400).json({ message: "Please provide both email and password." });
     }
 
-    const query = "SELECT * FROM signupdetails WHERE email = ?";
+    const query = "SELECT * FROM signupdetails WHERE BINARY email = ?";
     teacherconnection.query(query, [email], (err, results) => {
         if (err) {
             console.error("Error executing query:", err);

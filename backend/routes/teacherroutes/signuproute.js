@@ -12,9 +12,9 @@ signuproute.post("/teachersignup", async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const checkEmailQueryStudent = "SELECT * FROM signupdetails WHERE email = ?";
-        const checkEmailQueryTeacher = "SELECT * FROM signupdetails WHERE email = ?";
-        const checkEmailQueryHOD = "SELECT * FROM signupdetails WHERE email = ?"; // Assuming HOD uses a different table
+        const checkEmailQueryStudent = "SELECT * FROM signupdetails WHERE BINARY email = ?";
+        const checkEmailQueryTeacher = "SELECT * FROM signupdetails WHERE BINARY email = ?";
+        const checkEmailQueryHOD = "SELECT * FROM signupdetails WHERE BINARY email = ?"; // Assuming HOD uses a different table
 
         const studentEmailExists = await new Promise((resolve, reject) => {
             studentconnection.query(checkEmailQueryStudent, [email], (err, result) => {

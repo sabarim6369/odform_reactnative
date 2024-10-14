@@ -8,7 +8,7 @@ signuproute.post("/signup", async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const checkEmailQuery = "SELECT * FROM signupdetails WHERE email = ?";
+        const checkEmailQuery = "SELECT * FROM signupdetails WHERE BINARY email = ?";
         
         studentconnection.getConnection((err, connection) => {
             if (err) {

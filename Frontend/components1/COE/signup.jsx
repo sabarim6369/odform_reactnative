@@ -23,7 +23,7 @@ const Signup = ({ navigation }) => {
         try {
           const response = await axios.post(`${api}/coesignup`, { name, email, password});
           Alert.alert("Signup Successful", response.data.message, [
-            { text: "OK", onPress: () => navigation.navigate('coeLogin') }
+            { text: "OK", onPress: () => navigation.goBack() }
           ]);
         } catch (error) {
           const errorMessage = error.response?.data?.message || 'Server error. Please try again.';

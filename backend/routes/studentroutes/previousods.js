@@ -13,33 +13,33 @@ console.log(category,email,odtype)
     if(odtype==='internal'|| odtype==='external'){
         switch (category) {
             case "inProgressAdvisor":
-                query = `SELECT * FROM studentoddetails WHERE email=? and odtype=?`;
+                query = `SELECT * FROM studentoddetails WHERE BINARY email=? and odtype=?`;
                 connection=studentconnection;
                 break;
             case "inProgressHOD":
-                query = `SELECT * FROM acceptedod WHERE email=? and odtype=?`;
+                query = `SELECT * FROM acceptedod WHERE BINARY email=? and odtype=?`;
                 connection = teacherconnection;
                 break;
             case "inProgresscoe":
-                query = `SELECT * FROM acceptedodhodexternal WHERE email=?` ;
+                query = `SELECT * FROM acceptedodhodexternal WHERE BINARY email=?` ;
                 connection = hodconnection;
                 break;
             case "inProgressJioTagexternal":
-                query = "SELECT * FROM acceptedodcoe WHERE email=? and isActive=TRUE";
+                query = "SELECT * FROM acceptedodcoe WHERE BINARY email=? and isActive=TRUE";
                 connection = coeconnection;
                 break;
                 
             case "inProgressJioTaginternal":
-                query = `SELECT * FROM acceptedodhodinternal WHERE email=? AND isActive=TRUE`;
+                query = `SELECT * FROM acceptedodhodinternal WHERE BINARY email=? AND isActive=TRUE`;
                 connection = hodconnection;
                 break;
     
             case "accepted":
-                query = `SELECT * FROM accepted WHERE email=? and odtype=?`;
+                query = `SELECT * FROM accepted WHERE BINARY email=? and odtype=?`;
                 connection=studentconnection
                 break;
             case "rejected":
-                query = `SELECT * FROM rejectedod WHERE email=? and odtype=?`;
+                query = `SELECT * FROM rejectedod WHERE BINARY email=? and odtype=?`;
                 connection=teacherconnection
                 break;
             default:
@@ -49,19 +49,19 @@ console.log(category,email,odtype)
        else{
         switch (category) {
             case "inProgressAdvisor":
-                query = `SELECT * FROM studentoddetails WHERE email=?`;
+                query = `SELECT * FROM studentoddetails WHERE BINARY email=?`;
                 connection=studentconnection;
                 break;
             case "inProgressHOD":
-                query = `SELECT * FROM acceptedod WHERE email=?`;
+                query = `SELECT * FROM acceptedod WHERE BINARY email=?`;
                 connection = teacherconnection;
                 break;
             case "inProgresscoe":
-                query = `SELECT * FROM acceptedodhodexternal WHERE email=?` ;
+                query = `SELECT * FROM acceptedodhodexternal WHERE BINARY email=?` ;
                 connection = hodconnection;
                 break;
             case "inProgressJioTagexternal":
-                query = "SELECT * FROM acceptedodcoe WHERE email=?";
+                query = "SELECT * FROM acceptedodcoe WHERE BINARY email=?";
                 connection = coeconnection;
                 break;
                 
@@ -71,11 +71,11 @@ console.log(category,email,odtype)
                 break;
     
             case "accepted":
-                query = `SELECT * FROM accepted WHERE email=?`;
+                query = `SELECT * FROM accepted WHERE BINARY email=?`;
                 connection=studentconnection
                 break;
             case "rejected":
-                query = `SELECT * FROM rejectedod WHERE email=?`;
+                query = `SELECT * FROM rejectedod WHERE BINARY email=?`;
                 connection=teacherconnection
                 break;
             default:
@@ -85,7 +85,7 @@ console.log(category,email,odtype)
         
     }
    
-    // Execute the query
+   
     connection.query(query, [email,odtype], (err, result) => {
         if (err) {
             console.log("Error occurred:", err);

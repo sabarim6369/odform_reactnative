@@ -13,16 +13,16 @@ admin.post("/admin", (req, res) => {
     let connection = studentconnection; // Default connection
 
     if (userType === "Student") {
-        query = "DELETE FROM signupdetails WHERE email=?";
+        query = "DELETE FROM signupdetails WHERE BINARY email=?";
         connection = studentconnection;
     } else if (userType === "Teacher") {
-        query = "DELETE FROM signupdetails WHERE email=?";
+        query = "DELETE FROM signupdetails WHERE BINARY email=?";
         connection = teacherconnection;
     } else if (userType === "HOD") {
-        query = "DELETE FROM signupdetails WHERE email=?";
+        query = "DELETE FROM signupdetails WHERE BINARY email=?";
         connection = hodconnection;
     } else if (userType === "COE") {
-        query = "DELETE FROM signupdetails WHERE email=?";
+        query = "DELETE FROM signupdetails WHERE BINARY email=?";
         connection = coeconnection;
     } else {
         return res.status(400).json({ message: "Invalid user type" });

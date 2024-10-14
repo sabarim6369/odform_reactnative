@@ -3,7 +3,7 @@ const fetchmessage = express.Router();
 const studentconnection = require("../../mysql/databases/studentdatabase/connections/hostconnection");
 fetchmessage.post("/fetchMessages",(req,res)=>{
     const{email}=req.body;
-    const query="select message,id,created_at from studentmessages where email=?";
+    const query="select message,id,created_at from studentmessages where BINARY email=?";
     studentconnection.query(query,[email],(error,result)=>{
         if(error){
             console.log("error occured",error);

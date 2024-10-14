@@ -8,16 +8,16 @@ odinprogress.post("/fetchResultsByCategoryods",(req,res)=>{
     const{category,email}=req.body;
     let query='';
     if(category==="internalOD"){
-        query=`SELECT * FROM studentoddetails WHERE email=? and odtype="internal"`;
+        query=`SELECT * FROM studentoddetails WHERE BINARY email=? and odtype="internal"`;
         odtype='internal'
     }
     else if(category==="externalOD"){
-        query=`SELECT * FROM studentoddetails WHERE email=? and odtype="external"`;
+        query=`SELECT * FROM studentoddetails WHERE BINARY email=? and odtype="external"`;
         odtype='external'
     }
     else{
         console.log("😪😪😪😪😪😪")
-        query=`select * from studentoddetails where email=?`;
+        query=`select * from studentoddetails where BINARY email=?`;
     }
     studentconnection.query(query, [email], (err, result) => {
         if (err) {
