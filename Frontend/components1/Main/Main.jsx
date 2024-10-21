@@ -62,7 +62,7 @@ function Main() {
      
     
     {/* hod routes */}
-      <Stack.Screen name="hodLogin" component={hodLogin}options={{ headerShown: false }}/>
+      <Stack.Screen name="hodLogin" component={hodLogin}options={{ headerShown: false}} />
       <Stack.Screen name="hodSignup" component={hodSignup}options={{ headerShown: false }}/>
       <Stack.Screen name="hodhome" component={hodhome}options={{ headerShown: false }}/>
       <Stack.Screen name="registeredodhod" component={registeredhod}options={{ headerShown: false }}/>
